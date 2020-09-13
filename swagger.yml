@@ -10,6 +10,7 @@ info:
     url: "https://www.gnu.org/licenses/agpl-3.0.en.html"
 schemes:
 - "http"
+- "https"
 consumes:
 - "application/json"
 produces:
@@ -101,24 +102,6 @@ parameters:
     default: 20
     description: The numbers of items to return.
 definitions:
-  Time:  # <- time.Time is actually a struct
-    type: integer
-    #x-go-type:
-    #  import:
-    #    package: time
-    #    # for some reason setting an alias make acr/server.go not get generated with
-    #    # an import for "time" twice ¯\_(ツ)_/¯
-    #    alias: time0
-    #  embedded: true
-    #  type: "Time"
-  DeletedAt:
-    type: integer
-    x-go-custom-tag: gorm:"index"
-    x-go-type:
-      import:
-        package: gorm.io/gorm
-      embedded: true
-      type: DeletedAt
   Result:
     type: "object"
     properties:

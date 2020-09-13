@@ -25,7 +25,8 @@ func init() {
     "application/json"
   ],
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "swagger": "2.0",
   "info": {
@@ -174,17 +175,6 @@ func init() {
         "status": {
           "$ref": "#/definitions/Status"
         }
-      }
-    },
-    "DeletedAt": {
-      "type": "integer",
-      "x-go-custom-tag": "gorm:\"index\"",
-      "x-go-type": {
-        "embedded": true,
-        "import": {
-          "package": "gorm.io/gorm"
-        },
-        "type": "DeletedAt"
       }
     },
     "ExternalIds": {
@@ -374,9 +364,6 @@ func init() {
         }
       }
     },
-    "Time": {
-      "type": "integer"
-    },
     "Webhook": {
       "type": "object",
       "required": [
@@ -444,7 +431,8 @@ func init() {
     "application/json"
   ],
   "schemes": [
-    "http"
+    "http",
+    "https"
   ],
   "swagger": "2.0",
   "info": {
@@ -604,17 +592,6 @@ func init() {
         "status": {
           "$ref": "#/definitions/Status"
         }
-      }
-    },
-    "DeletedAt": {
-      "type": "integer",
-      "x-go-custom-tag": "gorm:\"index\"",
-      "x-go-type": {
-        "embedded": true,
-        "import": {
-          "package": "gorm.io/gorm"
-        },
-        "type": "DeletedAt"
       }
     },
     "ExternalIds": {
@@ -804,9 +781,6 @@ func init() {
           "type": "string"
         }
       }
-    },
-    "Time": {
-      "type": "integer"
     },
     "Webhook": {
       "type": "object",

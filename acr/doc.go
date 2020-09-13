@@ -7,6 +7,7 @@
 //
 //  Schemes:
 //    http
+//    https
 //  Host: localhost
 //  BasePath: /
 //  Version: 0.1.0
