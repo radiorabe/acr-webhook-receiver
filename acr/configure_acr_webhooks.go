@@ -36,12 +36,12 @@ var webhookFlags = struct {
 
 func configureFlags(api *operations.AcrWebhooksAPI) {
 	api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{
-		swag.CommandLineOptionsGroup{
+		{
 			ShortDescription: "Webhook Settings",
 			LongDescription:  "",
 			Options:          &webhookFlags,
 		},
-		swag.CommandLineOptionsGroup{
+		{
 			ShortDescription: "Database Settings",
 			LongDescription:  "",
 			Options:          &dbFlags,
@@ -83,6 +83,9 @@ func configureAPI(api *operations.AcrWebhooksAPI) http.Handler {
 
 	api.APIGetResultsHandler = apiop.GetResultsHandlerFunc(func(params apiop.GetResultsParams) middleware.Responder {
 		var result []*models.Result
+
+		tsUTCQuery := "to_timestamp((result -> 'data' -> 'metadata' ->> 'timestamp_utc') || ' 0000', 'YYYY-MM-DD HH24:MI:SS TZH')"
+
 		query := getDatabase().Model(&models.Result{}).Limit(int(*params.Limit)).Offset(int(*params.Offset))
 
 		if params.From != nil {
@@ -91,7 +94,7 @@ func configureAPI(api *operations.AcrWebhooksAPI) http.Handler {
 				return apiop.NewGetResultsInternalServerError()
 			}
 			query = query.Where(
-				"to_timestamp((result -> 'data' -> 'metadata' ->> 'timestamp_utc') || ' 0000', 'YYYY-MM-DD HH24:MI:SS TZH') > ?",
+				fmt.Sprintf("%s => ?", tsUTCQuery),
 				from,
 			)
 		}
@@ -101,10 +104,12 @@ func configureAPI(api *operations.AcrWebhooksAPI) http.Handler {
 				return apiop.NewGetResultsInternalServerError()
 			}
 			query = query.Where(
-				"to_timestamp((result -> 'data' -> 'metadata' ->> 'timestamp_utc') || ' 0000', 'YYYY-MM-DD HH24:MI:SS TZH') < ?",
+				fmt.Sprintf("%s <= ?", tsUTCQuery),
 				to,
 			)
 		}
+
+		query = query.Order(fmt.Sprintf("%s desc", tsUTCQuery))
 
 		tx := query.Scan(&result)
 		if tx.Error != nil {
