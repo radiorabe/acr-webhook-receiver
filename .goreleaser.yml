@@ -1,0 +1,40 @@
+before:
+  hooks:
+    - go mod download
+builds:
+- id: main
+  main: cmd/acr-webhooks-server/main.go
+  binary: acr-webhooks-server
+  env:
+  - CGO_ENABLED=0
+archives:
+- replacements:
+    darwin: Darwin
+    linux: Linux
+    windows: Windows
+    386: i386
+    amd64: x86_64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+dockers:
+  - image_templates:
+      - "ghcr.io/radiorabe/acr-webhook-receiver:{{ .Tag }}"
+      - "ghcr.io/radiorabe/acr-webhook-receiver:v{{ .Major }}"
+      - "ghcr.io/radiorabe/acr-webhook-receiver:v{{ .Major }}.{{ .Minor }}"
+      - "ghcr.io/radiorabe/acr-webhook-receiver:latest"
+    build_flag_templates:
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+    extra_files:
+      - etc/passwd

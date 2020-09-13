@@ -1,0 +1,302 @@
+swagger: "2.0"
+info:
+  title: ACRCloud Webhooks Receiver
+  description: |
+    Hooks to receive ACRCloud events on and a simple API to query the received data.
+    Stores all data in a PostgreSQL database for later querying.
+  version: 0.1.0
+  license:
+    name: "AGPLv3"
+    url: "https://www.gnu.org/licenses/agpl-3.0.en.html"
+schemes:
+- "http"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+paths:
+  /v1/_webhooks/results:
+    post:
+      summary: "ACRCloud results callback"
+      description: ""
+      operationId: "addResult"
+      tags:
+      - "webhook"
+      security:
+      - api_key: []
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "ACRCloud results entry"
+        required: true
+        schema:
+          $ref: "#/definitions/Webhook"
+      responses:
+        "201":
+          description: "Created"
+        "400":
+          description: "Bad Request"
+        "500":
+          description: "Server Error"
+  /v1/results:
+    get:
+      summary: "ACRCloud results callback"
+      description: ""
+      operationId: "getResults"
+      tags:
+      - "api"
+      parameters:
+        - $ref: '#/parameters/offsetParam'
+        - $ref: '#/parameters/limitParam'
+      responses:
+        "200":
+          description: "Returns array of results"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Result'
+        "500":
+          description: "Server Error"
+  /v1/results/{resultId}:
+    get:
+      summary: "ACRCloud result"
+      description: ""
+      operationId: "getResult"
+      tags:
+      - "api"
+      parameters:
+      - in: path
+        name: resultId
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: "Returns single result"
+          schema:
+            $ref: '#/definitions/Result'
+        "500":
+          description: "Server Error"
+securityDefinitions:
+  api_key:
+    type: "apiKey"
+    name: "api_key"
+    description: Used to secure the Webhook endpoints.
+    in: query
+parameters:
+  offsetParam:
+    in: query
+    name: offset
+    required: false
+    type: integer
+    minimum: 0
+    default: 0
+    description: The number of items to skip before starting to collect the result set.
+  limitParam:
+    in: query
+    name: limit
+    required: false
+    type: integer
+    minimum: 1
+    maximum: 50
+    default: 20
+    description: The numbers of items to return.
+definitions:
+  Time:  # <- time.Time is actually a struct
+    type: integer
+    #x-go-type:
+    #  import:
+    #    package: time
+    #    # for some reason setting an alias make acr/server.go not get generated with
+    #    # an import for "time" twice ¯\_(ツ)_/¯
+    #    alias: time0
+    #  embedded: true
+    #  type: "Time"
+  DeletedAt:
+    type: integer
+    x-go-custom-tag: gorm:"index"
+    x-go-type:
+      import:
+        package: gorm.io/gorm
+      embedded: true
+      type: DeletedAt
+  Result:
+    type: "object"
+    properties:
+      ID:
+        type: "integer"
+        x-go-custom-tag: gorm:"primaryKey;"
+      result:
+        $ref: '#/definitions/Webhook'
+        x-go-custom-tag: gorm:"type:jsonb;"
+  Webhook:
+    type: "object"
+    properties:
+      stream_id:
+        type: "string"
+      stream_url:
+        type: "string"
+      status:
+        type: "integer"
+        format: "int32"
+      data:
+        $ref: '#/definitions/Data'
+    required:
+      - stream_id
+      - stream_url
+      - status
+      - data
+  Data:
+    type: "object"
+    properties:
+      status:
+        $ref: '#/definitions/Status'
+      result_type:
+        type: integer
+        format: int32
+      metadata:
+        $ref: '#/definitions/Metadata'
+    required:
+      - status
+      - metadata
+  Status:
+    type: object
+    properties:
+      msg:
+        type: string
+      version:
+        type: string
+      code:
+        type: integer
+        format: int32
+    required:
+      - msg
+      - version
+      - code
+  Metadata:
+    type: object
+    properties:
+      music:
+        type: array
+        items:
+          $ref: '#/definitions/Music'
+      timestamp_utc:
+        type: string
+      played_duration:
+        type: integer
+        format: int64
+    required:
+      - timestamp_utc
+      - played_duration
+  Music:
+    type: object
+    properties:
+      acrid:
+        type: string
+      result_from:
+        type: integer
+        format: int32
+      score:
+        type: integer
+        minimum: 0
+        maximum: 100
+      title:
+        type: string
+      artists:
+        type: array
+        items:
+          $ref: '#/definitions/Artist'
+      album:
+        $ref: '#/definitions/Album'
+      label:
+        type: string
+      release_date:
+        type: string
+        format: date
+      play_offset_ms:
+        type: integer
+        format: int64
+      duration_ms:
+        type: integer
+        format: int64
+      sample_begin_time_offset_ms:
+        type: integer
+        format: int64
+      sample_end_time_offset_ms:
+        type: integer
+        format: int64
+      db_begin_time_offset_ms:
+        type: integer
+        format: int64
+      external_ids:
+        $ref: '#/definitions/ExternalIds'
+      external_metadata:
+        $ref: '#/definitions/ExternalMetadata'
+    required:
+      - acrid
+      - result_from
+      - score
+      - title
+      - play_offset_ms
+      - duration_ms
+      - sample_begin_time_offset_ms
+      - sample_end_time_offset_ms
+      - db_begin_time_offset_ms
+      - external_ids
+      - external_metadata
+  Album:
+    type: object
+    properties:
+      name:
+        type: string
+    required:
+      - name
+  Artist:
+    type: object
+    properties:
+      name:
+        type: string
+    required:
+      - name
+  ExternalIds:
+    type: object
+    properties:
+      deezer:
+        type: string
+      isrc:
+        type: string
+      itunes:
+        type: string
+      lyricfind:
+        type: string
+      musicstory:
+        type: string
+      spotify:
+        type: string
+      upc:
+        type: string
+      youtube:
+        type: string
+  ExternalMetadata:
+    type: object
+    properties:
+      deezer:
+        type: object
+      isrc:
+        type: object
+      itunes:
+        type: object
+      lyricfind:
+        type: object
+      musicstory:
+        type: object
+      spotify:
+        type: object
+      upc:
+        type: object
+      youtube:
+        type: object
+  principal:
+    type: "string"
+externalDocs:
+  description: "Find out more about Radio Bern RaBe"
+  url: "https://rabe.ch"
