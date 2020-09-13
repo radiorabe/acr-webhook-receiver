@@ -21,7 +21,8 @@ import (
 	"github.com/radiorabe/acr-webhook-receiver/models"
 )
 
-//go:generate swagger generate server --target ../../acr-webhook-service --name AcrWebhooks --spec ../swagger.yml --server-package acr --principal models.Principal
+//go:generate swagger generate server --spec ../swagger.yml --target ../ --name AcrWebhooks --server-package acr --principal models.Principal
+//go:generate swagger generate client --spec ../swagger.yml --target ../ --additional-initialism=ACR --principal models.Principal  --default-scheme=https
 
 var dbConn *gorm.DB
 
