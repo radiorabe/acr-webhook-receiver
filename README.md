@@ -10,7 +10,7 @@ API to query the database.
 ## Requirements
 
 * PostgreSQL server
-* ACRCloud account with Broadcast Monitorign subscription
+* ACRCloud account with Broadcast Monitoring subscription
 
 ## Usage
 
@@ -18,7 +18,9 @@ API to query the database.
 Usage:
   acr-webhooks-server [OPTIONS]
 
-Hooks to receove ACRCloud events on.
+Hooks to receive ACRCloud events on and a simple API to query the received data.
+Stores all data in a PostgreSQL database for later querying.
+
 
 Application Options:
       --scheme=            the listeners to enable, this can be repeated and defaults to the schemes in the swagger spec
@@ -46,7 +48,7 @@ Webhook Settings:
       --api-key=           API key transmitted by ACRCloud with each request
 
 Database Settings:
-      --postgres-dsn=      PostgreSQL DSN for gorm.io/driver/postgresql (default: postgres://nyqwenqy:wkm8eJxcF76iXR5KSWht9EInesR2IqcE@balarama.db.elephantsql.com:5432/nyqwenqy)
+      --postgres-dsn=      PostgreSQL DSN for gorm.io/driver/postgresql
 
 Help Options:
   -h, --help               Show this help message
