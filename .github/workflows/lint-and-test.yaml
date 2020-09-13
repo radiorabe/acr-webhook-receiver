@@ -3,7 +3,7 @@ name: Run pre-commit
 on:
   push:
     branches-ignore:
-      - master
+      - main
       - gh-pages
 
 jobs:
