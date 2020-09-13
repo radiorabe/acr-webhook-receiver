@@ -19,7 +19,7 @@ paths:
   /v1/_webhooks/results:
     post:
       summary: "ACRCloud results callback"
-      description: ""
+      description: "This hook is called by the ACRCloud service when it knows what song we weere playing."
       operationId: "addResult"
       tags:
       - "webhook"
@@ -41,14 +41,24 @@ paths:
           description: "Server Error"
   /v1/results:
     get:
-      summary: "ACRCloud results callback"
-      description: ""
+      summary: "Get ACRCloud Results"
+      description: "This is endpoint is useful for looking into and exporting the dataset."
       operationId: "getResults"
       tags:
       - "api"
       parameters:
         - $ref: '#/parameters/offsetParam'
         - $ref: '#/parameters/limitParam'
+        - in: query
+          name: from
+          required: false
+          type: string
+          format: date-time
+        - in: query
+          name: to
+          required: false
+          type: string
+          format: date-time
       responses:
         "200":
           description: "Returns array of results"
@@ -61,7 +71,7 @@ paths:
   /v1/results/{resultId}:
     get:
       summary: "ACRCloud result"
-      description: ""
+      description: "Use this endpoint to fetch information on an exact entry."
       operationId: "getResult"
       tags:
       - "api"

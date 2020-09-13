@@ -46,6 +46,7 @@ func init() {
             "api_key": []
           }
         ],
+        "description": "This hook is called by the ACRCloud service when it knows what song we weere playing.",
         "tags": [
           "webhook"
         ],
@@ -77,10 +78,11 @@ func init() {
     },
     "/v1/results": {
       "get": {
+        "description": "This is endpoint is useful for looking into and exporting the dataset.",
         "tags": [
           "api"
         ],
-        "summary": "ACRCloud results callback",
+        "summary": "Get ACRCloud Results",
         "operationId": "getResults",
         "parameters": [
           {
@@ -88,6 +90,18 @@ func init() {
           },
           {
             "$ref": "#/parameters/limitParam"
+          },
+          {
+            "type": "string",
+            "format": "date-time",
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "format": "date-time",
+            "name": "to",
+            "in": "query"
           }
         ],
         "responses": {
@@ -108,6 +122,7 @@ func init() {
     },
     "/v1/results/{resultId}": {
       "get": {
+        "description": "Use this endpoint to fetch information on an exact entry.",
         "tags": [
           "api"
         ],
@@ -452,6 +467,7 @@ func init() {
             "api_key": []
           }
         ],
+        "description": "This hook is called by the ACRCloud service when it knows what song we weere playing.",
         "tags": [
           "webhook"
         ],
@@ -483,10 +499,11 @@ func init() {
     },
     "/v1/results": {
       "get": {
+        "description": "This is endpoint is useful for looking into and exporting the dataset.",
         "tags": [
           "api"
         ],
-        "summary": "ACRCloud results callback",
+        "summary": "Get ACRCloud Results",
         "operationId": "getResults",
         "parameters": [
           {
@@ -504,6 +521,18 @@ func init() {
             "default": 20,
             "description": "The numbers of items to return.",
             "name": "limit",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "format": "date-time",
+            "name": "from",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "format": "date-time",
+            "name": "to",
             "in": "query"
           }
         ],
@@ -525,6 +554,7 @@ func init() {
     },
     "/v1/results/{resultId}": {
       "get": {
+        "description": "Use this endpoint to fetch information on an exact entry.",
         "tags": [
           "api"
         ],

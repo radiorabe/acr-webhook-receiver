@@ -10,13 +10,16 @@ import (
 	"net/url"
 	golangswaggerpaths "path"
 
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
 // GetResultsURL generates an URL for the get results operation
 type GetResultsURL struct {
+	From   *strfmt.DateTime
 	Limit  *int64
 	Offset *int64
+	To     *strfmt.DateTime
 
 	_basePath string
 	// avoid unkeyed usage
@@ -49,6 +52,14 @@ func (o *GetResultsURL) Build() (*url.URL, error) {
 
 	qs := make(url.Values)
 
+	var fromQ string
+	if o.From != nil {
+		fromQ = o.From.String()
+	}
+	if fromQ != "" {
+		qs.Set("from", fromQ)
+	}
+
 	var limitQ string
 	if o.Limit != nil {
 		limitQ = swag.FormatInt64(*o.Limit)
@@ -63,6 +74,14 @@ func (o *GetResultsURL) Build() (*url.URL, error) {
 	}
 	if offsetQ != "" {
 		qs.Set("offset", offsetQ)
+	}
+
+	var toQ string
+	if o.To != nil {
+		toQ = o.To.String()
+	}
+	if toQ != "" {
+		qs.Set("to", toQ)
 	}
 
 	_result.RawQuery = qs.Encode()

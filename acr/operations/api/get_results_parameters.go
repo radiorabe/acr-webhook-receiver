@@ -43,6 +43,10 @@ type GetResultsParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
+	/*
+	  In: query
+	*/
+	From *strfmt.DateTime
 	/*The numbers of items to return.
 	  Maximum: 50
 	  Minimum: 1
@@ -56,6 +60,10 @@ type GetResultsParams struct {
 	  Default: 0
 	*/
 	Offset *int64
+	/*
+	  In: query
+	*/
+	To *strfmt.DateTime
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
@@ -69,6 +77,11 @@ func (o *GetResultsParams) BindRequest(r *http.Request, route *middleware.Matche
 
 	qs := runtime.Values(r.URL.Query())
 
+	qFrom, qhkFrom, _ := qs.GetOK("from")
+	if err := o.bindFrom(qFrom, qhkFrom, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qLimit, qhkLimit, _ := qs.GetOK("limit")
 	if err := o.bindLimit(qLimit, qhkLimit, route.Formats); err != nil {
 		res = append(res, err)
@@ -79,8 +92,49 @@ func (o *GetResultsParams) BindRequest(r *http.Request, route *middleware.Matche
 		res = append(res, err)
 	}
 
+	qTo, qhkTo, _ := qs.GetOK("to")
+	if err := o.bindTo(qTo, qhkTo, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+// bindFrom binds and validates parameter From from query.
+func (o *GetResultsParams) bindFrom(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	// Format: date-time
+	value, err := formats.Parse("date-time", raw)
+	if err != nil {
+		return errors.InvalidType("from", "query", "strfmt.DateTime", raw)
+	}
+	o.From = (value.(*strfmt.DateTime))
+
+	if err := o.validateFrom(formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// validateFrom carries on validations for parameter From
+func (o *GetResultsParams) validateFrom(formats strfmt.Registry) error {
+
+	if err := validate.FormatOf("from", "query", "date-time", o.From.String(), formats); err != nil {
+		return err
 	}
 	return nil
 }
@@ -160,5 +214,41 @@ func (o *GetResultsParams) validateOffset(formats strfmt.Registry) error {
 		return err
 	}
 
+	return nil
+}
+
+// bindTo binds and validates parameter To from query.
+func (o *GetResultsParams) bindTo(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+	// AllowEmptyValue: false
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	// Format: date-time
+	value, err := formats.Parse("date-time", raw)
+	if err != nil {
+		return errors.InvalidType("to", "query", "strfmt.DateTime", raw)
+	}
+	o.To = (value.(*strfmt.DateTime))
+
+	if err := o.validateTo(formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// validateTo carries on validations for parameter To
+func (o *GetResultsParams) validateTo(formats strfmt.Registry) error {
+
+	if err := validate.FormatOf("to", "query", "date-time", o.To.String(), formats); err != nil {
+		return err
+	}
 	return nil
 }

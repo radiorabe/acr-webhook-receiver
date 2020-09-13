@@ -33,6 +33,8 @@ func NewGetResult(ctx *middleware.Context, handler GetResultHandler) *GetResult 
 
 ACRCloud result
 
+Use this endpoint to fetch information on an exact entry.
+
 */
 type GetResult struct {
 	Context *middleware.Context

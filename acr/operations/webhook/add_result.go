@@ -35,6 +35,8 @@ func NewAddResult(ctx *middleware.Context, handler AddResultHandler) *AddResult 
 
 ACRCloud results callback
 
+This hook is called by the ACRCloud service when it knows what song we weere playing.
+
 */
 type AddResult struct {
 	Context *middleware.Context

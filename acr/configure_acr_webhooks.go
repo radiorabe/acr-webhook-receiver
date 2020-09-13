@@ -82,7 +82,30 @@ func configureAPI(api *operations.AcrWebhooksAPI) http.Handler {
 
 	api.APIGetResultsHandler = apiop.GetResultsHandlerFunc(func(params apiop.GetResultsParams) middleware.Responder {
 		var result []*models.Result
-		tx := getDatabase().Model(&models.Result{}).Limit(int(*params.Limit)).Offset(int(*params.Offset)).Scan(&result)
+		query := getDatabase().Model(&models.Result{}).Limit(int(*params.Limit)).Offset(int(*params.Offset))
+
+		if params.From != nil {
+			from, err := params.From.Value()
+			if err != nil {
+				return apiop.NewGetResultsInternalServerError()
+			}
+			query = query.Where(
+				"to_timestamp((result -> 'data' -> 'metadata' ->> 'timestamp_utc') || ' 0000', 'YYYY-MM-DD HH24:MI:SS TZH') > ?",
+				from,
+			)
+		}
+		if params.To != nil {
+			to, err := params.To.Value()
+			if err != nil {
+				return apiop.NewGetResultsInternalServerError()
+			}
+			query = query.Where(
+				"to_timestamp((result -> 'data' -> 'metadata' ->> 'timestamp_utc') || ' 0000', 'YYYY-MM-DD HH24:MI:SS TZH') < ?",
+				to,
+			)
+		}
+
+		tx := query.Scan(&result)
 		if tx.Error != nil {
 			return apiop.NewGetResultsInternalServerError()
 		}

@@ -31,7 +31,9 @@ func NewGetResults(ctx *middleware.Context, handler GetResultsHandler) *GetResul
 
 /*GetResults swagger:route GET /v1/results api getResults
 
-ACRCloud results callback
+Get ACRCloud Results
+
+This is endpoint is useful for looking into and exporting the dataset.
 
 */
 type GetResults struct {
