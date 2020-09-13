@@ -27,11 +27,11 @@ import (
 var dbConn *gorm.DB
 
 var dbFlags = struct {
-	DSN string `long:"postgres-dsn" description:"PostgreSQL DSN for gorm.io/driver/postgresql"`
+	DSN string `env:"POSTGRES_DSN" long:"postgres-dsn" description:"PostgreSQL DSN for gorm.io/driver/postgresql"`
 }{}
 
 var webhookFlags = struct {
-	APIKey string `long:"api-key" description:"API key transmitted by ACRCloud with each request"`
+	APIKey string `env:"ACR_API_KEY" long:"api-key" description:"API key transmitted by ACRCloud with each request"`
 }{}
 
 func configureFlags(api *operations.AcrWebhooksAPI) {

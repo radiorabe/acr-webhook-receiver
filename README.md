@@ -45,10 +45,10 @@ Application Options:
       --tls-write-timeout= maximum duration before timing out write of the response
 
 Webhook Settings:
-      --api-key=           API key transmitted by ACRCloud with each request
+      --api-key=           API key transmitted by ACRCloud with each request [$ACR_API_KEY]
 
 Database Settings:
-      --postgres-dsn=      PostgreSQL DSN for gorm.io/driver/postgresql
+      --postgres-dsn=      PostgreSQL DSN for gorm.io/driver/postgresql [$POSTGRES_DSN]
 
 Help Options:
   -h, --help               Show this help message
