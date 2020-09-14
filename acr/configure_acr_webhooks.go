@@ -6,6 +6,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -17,12 +18,15 @@ import (
 
 	"github.com/radiorabe/acr-webhook-receiver/acr/operations"
 	apiop "github.com/radiorabe/acr-webhook-receiver/acr/operations/api"
+	"github.com/radiorabe/acr-webhook-receiver/acr/operations/compat"
 	"github.com/radiorabe/acr-webhook-receiver/acr/operations/webhook"
 	"github.com/radiorabe/acr-webhook-receiver/models"
 )
 
 //go:generate swagger generate server --spec ../swagger.yml --target ../ --additional-initialism=ACR --principal models.Principal --default-scheme=https --name ACRWebhooks --server-package acr
-//go:generate swagger generate client --spec ../swagger.yml --target ../ --additional-initialism=ACR --principal models.Principal --default-scheme=https --tags=api
+//go:generate swagger generate client --spec ../swagger.yml --target ../ --additional-initialism=ACR --principal models.Principal --default-scheme=https --tags=api --tags=compat
+
+const resultsRecordTsUTCQuery = "to_timestamp((result -> 'data' -> 'metadata' ->> 'timestamp_utc') || ' 0000', 'YYYY-MM-DD HH24:MI:SS TZH')"
 
 var dbConn *gorm.DB
 
@@ -67,7 +71,6 @@ func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 	}
 
 	api.WebhookAddResultHandler = webhook.AddResultHandlerFunc(func(params webhook.AddResultParams, principal *models.Principal) middleware.Responder {
-		fmt.Print(principal)
 		record := &models.Result{
 			Result: params.Body,
 		}
@@ -84,17 +87,16 @@ func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 	api.APIGetResultsHandler = apiop.GetResultsHandlerFunc(func(params apiop.GetResultsParams) middleware.Responder {
 		var result []*models.Result
 
-		tsUTCQuery := "to_timestamp((result -> 'data' -> 'metadata' ->> 'timestamp_utc') || ' 0000', 'YYYY-MM-DD HH24:MI:SS TZH')"
-
-		query := getDatabase().Model(&models.Result{}).Limit(int(*params.Limit)).Offset(int(*params.Offset))
-
+		query := getDatabase().Model(
+			&models.Result{},
+		)
 		if params.From != nil {
 			from, err := params.From.Value()
 			if err != nil {
 				return apiop.NewGetResultsInternalServerError()
 			}
 			query = query.Where(
-				fmt.Sprintf("%s => ?", tsUTCQuery),
+				fmt.Sprintf("%s >= ?", resultsRecordTsUTCQuery),
 				from,
 			)
 		}
@@ -104,14 +106,21 @@ func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 				return apiop.NewGetResultsInternalServerError()
 			}
 			query = query.Where(
-				fmt.Sprintf("%s <= ?", tsUTCQuery),
+				fmt.Sprintf("%s <= ?", resultsRecordTsUTCQuery),
 				to,
 			)
 		}
 
-		query = query.Order(fmt.Sprintf("%s desc", tsUTCQuery))
+		tx := query.Limit(
+			int(*params.Limit),
+		).Offset(
+			int(*params.Offset),
+		).Order(
+			fmt.Sprintf("%s desc", resultsRecordTsUTCQuery),
+		).Scan(
+			&result,
+		)
 
-		tx := query.Scan(&result)
 		if tx.Error != nil {
 			return apiop.NewGetResultsInternalServerError()
 		}
@@ -120,12 +129,43 @@ func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 
 	api.APIGetResultHandler = apiop.GetResultHandlerFunc(func(params apiop.GetResultParams) middleware.Responder {
 		result := &models.Result{}
+
 		tx := getDatabase().First(result, params.ResultID)
+
 		if tx.Error != nil {
 			return apiop.NewGetResultInternalServerError()
 		}
-
 		return apiop.NewGetResultOK().WithPayload(result)
+	})
+
+	api.CompatGetCustomStreamHandler = compat.GetCustomStreamHandlerFunc(func(params compat.GetCustomStreamParams) middleware.Responder {
+		var result []*models.Result
+
+		date, err := time.Parse("20060102", params.Date)
+		if err != nil {
+			return compat.NewGetCustomStreamBadRequest()
+		}
+
+		tx := getDatabase().Model(
+			&models.Result{},
+		).Select(
+			"result",
+		).Where(
+			fmt.Sprintf("%s >= ?", resultsRecordTsUTCQuery),
+			date.Format("2006-01-02T15:04:05Z"),
+		).Where(
+			fmt.Sprintf("%s < ?", resultsRecordTsUTCQuery),
+			date.Add(24*time.Hour).Format("2006-01-02T15:04:05Z"),
+		).Order(
+			fmt.Sprintf("%s asc", resultsRecordTsUTCQuery),
+		).Scan(
+			&result,
+		)
+
+		if tx.Error != nil {
+			return apiop.NewGetResultsInternalServerError()
+		}
+		return apiop.NewGetResultsOK().WithPayload(result)
 	})
 
 	api.PreServerShutdown = func() {}

@@ -87,6 +87,41 @@ paths:
             $ref: '#/definitions/Result'
         "500":
           description: "Server Error"
+  /v1/acrcloud-monitor-streams/{streamId}/results:
+    get:
+      summary: "ACRCloud Custom Streams Full Day Endpoint"
+      description: "This endpoint implements the same API as upstream ACRCloud does."
+      operationId: "getCustomStream"
+      tags:
+      - "compat"
+      parameters:
+      - in: path
+        name: streamId
+        description: Stream ID, default is the non-realtime RaBe program.
+        required: true
+        type: string
+        default: s-qXuJARB
+      - in: query
+        name: access_key
+        description: Ignored but available for compatibility with upstream.
+        required: false
+        type: string
+      - in: query
+        name: date
+        description: The UTC date in the format 'YYYYMMDD'
+        required: true
+        type: string
+      responses:
+        "200":
+          description: "Results without local ID"
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Webhook'
+        "400":
+          description: "Bad Request"
+        "500":
+          description: "Server Error"
 securityDefinitions:
   api_key:
     type: "apiKey"

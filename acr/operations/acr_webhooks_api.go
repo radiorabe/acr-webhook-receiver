@@ -20,6 +20,7 @@ import (
 	"github.com/go-openapi/swag"
 
 	apiops "github.com/radiorabe/acr-webhook-receiver/acr/operations/api"
+	"github.com/radiorabe/acr-webhook-receiver/acr/operations/compat"
 	"github.com/radiorabe/acr-webhook-receiver/acr/operations/webhook"
 	"github.com/radiorabe/acr-webhook-receiver/models"
 )
@@ -48,6 +49,9 @@ func NewACRWebhooksAPI(spec *loads.Document) *ACRWebhooksAPI {
 
 		WebhookAddResultHandler: webhook.AddResultHandlerFunc(func(params webhook.AddResultParams, principal *models.Principal) middleware.Responder {
 			return middleware.NotImplemented("operation webhook.AddResult has not yet been implemented")
+		}),
+		CompatGetCustomStreamHandler: compat.GetCustomStreamHandlerFunc(func(params compat.GetCustomStreamParams) middleware.Responder {
+			return middleware.NotImplemented("operation compat.GetCustomStream has not yet been implemented")
 		}),
 		APIGetResultHandler: apiops.GetResultHandlerFunc(func(params apiops.GetResultParams) middleware.Responder {
 			return middleware.NotImplemented("operation api.GetResult has not yet been implemented")
@@ -107,6 +111,8 @@ type ACRWebhooksAPI struct {
 
 	// WebhookAddResultHandler sets the operation handler for the add result operation
 	WebhookAddResultHandler webhook.AddResultHandler
+	// CompatGetCustomStreamHandler sets the operation handler for the get custom stream operation
+	CompatGetCustomStreamHandler compat.GetCustomStreamHandler
 	// APIGetResultHandler sets the operation handler for the get result operation
 	APIGetResultHandler apiops.GetResultHandler
 	// APIGetResultsHandler sets the operation handler for the get results operation
@@ -193,6 +199,9 @@ func (o *ACRWebhooksAPI) Validate() error {
 
 	if o.WebhookAddResultHandler == nil {
 		unregistered = append(unregistered, "webhook.AddResultHandler")
+	}
+	if o.CompatGetCustomStreamHandler == nil {
+		unregistered = append(unregistered, "compat.GetCustomStreamHandler")
 	}
 	if o.APIGetResultHandler == nil {
 		unregistered = append(unregistered, "api.GetResultHandler")
@@ -303,6 +312,10 @@ func (o *ACRWebhooksAPI) initHandlerCache() {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
 	o.handlers["POST"]["/v1/_webhooks/results"] = webhook.NewAddResult(o.context, o.WebhookAddResultHandler)
+	if o.handlers["GET"] == nil {
+		o.handlers["GET"] = make(map[string]http.Handler)
+	}
+	o.handlers["GET"]["/v1/acrcloud-monitor-streams/{streamId}/results"] = compat.NewGetCustomStream(o.context, o.CompatGetCustomStreamHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

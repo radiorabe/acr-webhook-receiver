@@ -76,6 +76,56 @@ func init() {
         }
       }
     },
+    "/v1/acrcloud-monitor-streams/{streamId}/results": {
+      "get": {
+        "description": "This endpoint implements the same API as upstream ACRCloud does.",
+        "tags": [
+          "compat"
+        ],
+        "summary": "ACRCloud Custom Streams Full Day Endpoint",
+        "operationId": "getCustomStream",
+        "parameters": [
+          {
+            "type": "string",
+            "default": "s-qXuJARB",
+            "description": "Stream ID, default is the non-realtime RaBe program.",
+            "name": "streamId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Ignored but available for compatibility with upstream.",
+            "name": "access_key",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "The UTC date in the format 'YYYYMMDD'",
+            "name": "date",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Results without local ID",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Webhook"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
     "/v1/results": {
       "get": {
         "description": "This is endpoint is useful for looking into and exporting the dataset.",
@@ -487,6 +537,56 @@ func init() {
         "responses": {
           "201": {
             "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Server Error"
+          }
+        }
+      }
+    },
+    "/v1/acrcloud-monitor-streams/{streamId}/results": {
+      "get": {
+        "description": "This endpoint implements the same API as upstream ACRCloud does.",
+        "tags": [
+          "compat"
+        ],
+        "summary": "ACRCloud Custom Streams Full Day Endpoint",
+        "operationId": "getCustomStream",
+        "parameters": [
+          {
+            "type": "string",
+            "default": "s-qXuJARB",
+            "description": "Stream ID, default is the non-realtime RaBe program.",
+            "name": "streamId",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "string",
+            "description": "Ignored but available for compatibility with upstream.",
+            "name": "access_key",
+            "in": "query"
+          },
+          {
+            "type": "string",
+            "description": "The UTC date in the format 'YYYYMMDD'",
+            "name": "date",
+            "in": "query",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Results without local ID",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Webhook"
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
