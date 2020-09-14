@@ -11,7 +11,6 @@ import (
 	"github.com/go-openapi/strfmt"
 
 	apiops "github.com/radiorabe/acr-webhook-receiver/client/api"
-	"github.com/radiorabe/acr-webhook-receiver/client/webhook"
 )
 
 // Default ACR cloud webhooks receiver HTTP client.
@@ -57,7 +56,6 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *ACRCloudWe
 	cli := new(ACRCloudWebhooksReceiver)
 	cli.Transport = transport
 	cli.API = apiops.New(transport, formats)
-	cli.Webhook = webhook.New(transport, formats)
 	return cli
 }
 
@@ -104,8 +102,6 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 type ACRCloudWebhooksReceiver struct {
 	API apiops.ClientService
 
-	Webhook webhook.ClientService
-
 	Transport runtime.ClientTransport
 }
 
@@ -113,5 +109,4 @@ type ACRCloudWebhooksReceiver struct {
 func (c *ACRCloudWebhooksReceiver) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
 	c.API.SetTransport(transport)
-	c.Webhook.SetTransport(transport)
 }
