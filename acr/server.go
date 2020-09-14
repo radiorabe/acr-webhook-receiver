@@ -43,8 +43,8 @@ func init() {
 	}
 }
 
-// NewServer creates a new api acr webhooks server but does not configure it
-func NewServer(api *operations.AcrWebhooksAPI) *Server {
+// NewServer creates a new api ACR webhooks server but does not configure it
+func NewServer(api *operations.ACRWebhooksAPI) *Server {
 	s := new(Server)
 
 	s.shutdown = make(chan struct{})
@@ -67,7 +67,7 @@ func (s *Server) ConfigureFlags() {
 	}
 }
 
-// Server for the acr webhooks API
+// Server for the ACR webhooks API
 type Server struct {
 	EnabledListeners []string         `long:"scheme" description:"the listeners to enable, this can be repeated and defaults to the schemes in the swagger spec"`
 	CleanupTimeout   time.Duration    `long:"cleanup-timeout" description:"grace period for which to wait before killing idle connections" default:"10s"`
@@ -96,7 +96,7 @@ type Server struct {
 	TLSWriteTimeout   time.Duration  `long:"tls-write-timeout" description:"maximum duration before timing out write of the response"`
 	httpsServerL      net.Listener
 
-	api          *operations.AcrWebhooksAPI
+	api          *operations.ACRWebhooksAPI
 	handler      http.Handler
 	hasListeners bool
 	shutdown     chan struct{}
@@ -126,7 +126,7 @@ func (s *Server) Fatalf(f string, args ...interface{}) {
 }
 
 // SetAPI configures the server with the specified API. Needs to be called before Serve
-func (s *Server) SetAPI(api *operations.AcrWebhooksAPI) {
+func (s *Server) SetAPI(api *operations.ACRWebhooksAPI) {
 	if api == nil {
 		s.api = nil
 		s.handler = nil
@@ -187,13 +187,13 @@ func (s *Server) Serve() (err error) {
 
 		servers = append(servers, domainSocket)
 		wg.Add(1)
-		s.Logf("Serving acr webhooks at unix://%s", s.SocketPath)
+		s.Logf("Serving ACR webhooks at unix://%s", s.SocketPath)
 		go func(l net.Listener) {
 			defer wg.Done()
 			if err := domainSocket.Serve(l); err != nil && err != http.ErrServerClosed {
 				s.Fatalf("%v", err)
 			}
-			s.Logf("Stopped serving acr webhooks at unix://%s", s.SocketPath)
+			s.Logf("Stopped serving ACR webhooks at unix://%s", s.SocketPath)
 		}(s.domainSocketL)
 	}
 
@@ -217,13 +217,13 @@ func (s *Server) Serve() (err error) {
 
 		servers = append(servers, httpServer)
 		wg.Add(1)
-		s.Logf("Serving acr webhooks at http://%s", s.httpServerL.Addr())
+		s.Logf("Serving ACR webhooks at http://%s", s.httpServerL.Addr())
 		go func(l net.Listener) {
 			defer wg.Done()
 			if err := httpServer.Serve(l); err != nil && err != http.ErrServerClosed {
 				s.Fatalf("%v", err)
 			}
-			s.Logf("Stopped serving acr webhooks at http://%s", l.Addr())
+			s.Logf("Stopped serving ACR webhooks at http://%s", l.Addr())
 		}(s.httpServerL)
 	}
 
@@ -313,13 +313,13 @@ func (s *Server) Serve() (err error) {
 
 		servers = append(servers, httpsServer)
 		wg.Add(1)
-		s.Logf("Serving acr webhooks at https://%s", s.httpsServerL.Addr())
+		s.Logf("Serving ACR webhooks at https://%s", s.httpsServerL.Addr())
 		go func(l net.Listener) {
 			defer wg.Done()
 			if err := httpsServer.Serve(l); err != nil && err != http.ErrServerClosed {
 				s.Fatalf("%v", err)
 			}
-			s.Logf("Stopped serving acr webhooks at https://%s", l.Addr())
+			s.Logf("Stopped serving ACR webhooks at https://%s", l.Addr())
 		}(tls.NewListener(s.httpsServerL, httpsServer.TLSConfig))
 	}
 

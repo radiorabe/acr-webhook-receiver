@@ -24,9 +24,9 @@ import (
 	"github.com/radiorabe/acr-webhook-receiver/models"
 )
 
-// NewAcrWebhooksAPI creates a new AcrWebhooks instance
-func NewAcrWebhooksAPI(spec *loads.Document) *AcrWebhooksAPI {
-	return &AcrWebhooksAPI{
+// NewACRWebhooksAPI creates a new ACRWebhooks instance
+func NewACRWebhooksAPI(spec *loads.Document) *ACRWebhooksAPI {
+	return &ACRWebhooksAPI{
 		handlers:            make(map[string]map[string]http.Handler),
 		formats:             strfmt.Default,
 		defaultConsumes:     "application/json",
@@ -65,10 +65,10 @@ func NewAcrWebhooksAPI(spec *loads.Document) *AcrWebhooksAPI {
 	}
 }
 
-/*AcrWebhooksAPI Hooks to receive ACRCloud events on and a simple API to query the received data.
+/*ACRWebhooksAPI Hooks to receive ACRCloud events on and a simple API to query the received data.
 Stores all data in a PostgreSQL database for later querying.
 */
-type AcrWebhooksAPI struct {
+type ACRWebhooksAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -131,52 +131,52 @@ type AcrWebhooksAPI struct {
 }
 
 // UseRedoc for documentation at /docs
-func (o *AcrWebhooksAPI) UseRedoc() {
+func (o *ACRWebhooksAPI) UseRedoc() {
 	o.useSwaggerUI = false
 }
 
 // UseSwaggerUI for documentation at /docs
-func (o *AcrWebhooksAPI) UseSwaggerUI() {
+func (o *ACRWebhooksAPI) UseSwaggerUI() {
 	o.useSwaggerUI = true
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *AcrWebhooksAPI) SetDefaultProduces(mediaType string) {
+func (o *ACRWebhooksAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *AcrWebhooksAPI) SetDefaultConsumes(mediaType string) {
+func (o *ACRWebhooksAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *AcrWebhooksAPI) SetSpec(spec *loads.Document) {
+func (o *ACRWebhooksAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *AcrWebhooksAPI) DefaultProduces() string {
+func (o *ACRWebhooksAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *AcrWebhooksAPI) DefaultConsumes() string {
+func (o *ACRWebhooksAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *AcrWebhooksAPI) Formats() strfmt.Registry {
+func (o *ACRWebhooksAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *AcrWebhooksAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *ACRWebhooksAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the AcrWebhooksAPI
-func (o *AcrWebhooksAPI) Validate() error {
+// Validate validates the registrations in the ACRWebhooksAPI
+func (o *ACRWebhooksAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -209,12 +209,12 @@ func (o *AcrWebhooksAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *AcrWebhooksAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *ACRWebhooksAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *AcrWebhooksAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+func (o *ACRWebhooksAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 	result := make(map[string]runtime.Authenticator)
 	for name := range schemes {
 		switch name {
@@ -230,13 +230,13 @@ func (o *AcrWebhooksAPI) AuthenticatorsFor(schemes map[string]spec.SecuritySchem
 }
 
 // Authorizer returns the registered authorizer
-func (o *AcrWebhooksAPI) Authorizer() runtime.Authorizer {
+func (o *ACRWebhooksAPI) Authorizer() runtime.Authorizer {
 	return o.APIAuthorizer
 }
 
 // ConsumersFor gets the consumers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *AcrWebhooksAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *ACRWebhooksAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 	result := make(map[string]runtime.Consumer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -253,7 +253,7 @@ func (o *AcrWebhooksAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Co
 
 // ProducersFor gets the producers for the specified media types.
 // MIME type parameters are ignored here.
-func (o *AcrWebhooksAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *ACRWebhooksAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 	result := make(map[string]runtime.Producer, len(mediaTypes))
 	for _, mt := range mediaTypes {
 		switch mt {
@@ -269,7 +269,7 @@ func (o *AcrWebhooksAPI) ProducersFor(mediaTypes []string) map[string]runtime.Pr
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *AcrWebhooksAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *ACRWebhooksAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -284,8 +284,8 @@ func (o *AcrWebhooksAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	return h, ok
 }
 
-// Context returns the middleware context for the acr webhooks API
-func (o *AcrWebhooksAPI) Context() *middleware.Context {
+// Context returns the middleware context for the ACR webhooks API
+func (o *ACRWebhooksAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -293,7 +293,7 @@ func (o *AcrWebhooksAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *AcrWebhooksAPI) initHandlerCache() {
+func (o *ACRWebhooksAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 	if o.handlers == nil {
 		o.handlers = make(map[string]map[string]http.Handler)
@@ -315,7 +315,7 @@ func (o *AcrWebhooksAPI) initHandlerCache() {
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *AcrWebhooksAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *ACRWebhooksAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -328,24 +328,24 @@ func (o *AcrWebhooksAPI) Serve(builder middleware.Builder) http.Handler {
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middleware as you see fit
-func (o *AcrWebhooksAPI) Init() {
+func (o *ACRWebhooksAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}
 }
 
 // RegisterConsumer allows you to add (or override) a consumer for a media type.
-func (o *AcrWebhooksAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
+func (o *ACRWebhooksAPI) RegisterConsumer(mediaType string, consumer runtime.Consumer) {
 	o.customConsumers[mediaType] = consumer
 }
 
 // RegisterProducer allows you to add (or override) a producer for a media type.
-func (o *AcrWebhooksAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
+func (o *ACRWebhooksAPI) RegisterProducer(mediaType string, producer runtime.Producer) {
 	o.customProducers[mediaType] = producer
 }
 
 // AddMiddlewareFor adds a http middleware to existing handler
-func (o *AcrWebhooksAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
+func (o *ACRWebhooksAPI) AddMiddlewareFor(method, path string, builder middleware.Builder) {
 	um := strings.ToUpper(method)
 	if path == "/" {
 		path = ""

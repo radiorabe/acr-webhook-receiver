@@ -21,8 +21,8 @@ import (
 	"github.com/radiorabe/acr-webhook-receiver/models"
 )
 
-//go:generate swagger generate server --spec ../swagger.yml --target ../ --name AcrWebhooks --server-package acr --principal models.Principal
-//go:generate swagger generate client --spec ../swagger.yml --target ../ --additional-initialism=ACR --principal models.Principal  --default-scheme=https
+//go:generate swagger generate server --spec ../swagger.yml --target ../ --additional-initialism=ACR --principal models.Principal --default-scheme=https --name ACRWebhooks --server-package acr
+//go:generate swagger generate client --spec ../swagger.yml --target ../ --additional-initialism=ACR --principal models.Principal --default-scheme=https
 
 var dbConn *gorm.DB
 
@@ -34,7 +34,7 @@ var webhookFlags = struct {
 	APIKey string `env:"ACR_API_KEY" long:"api-key" description:"API key transmitted by ACRCloud with each request"`
 }{}
 
-func configureFlags(api *operations.AcrWebhooksAPI) {
+func configureFlags(api *operations.ACRWebhooksAPI) {
 	api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{
 		{
 			ShortDescription: "Webhook Settings",
@@ -49,7 +49,7 @@ func configureFlags(api *operations.AcrWebhooksAPI) {
 	}
 }
 
-func configureAPI(api *operations.AcrWebhooksAPI) http.Handler {
+func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 	api.ServeError = errors.ServeError
 
 	api.UseSwaggerUI()

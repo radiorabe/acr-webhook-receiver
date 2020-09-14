@@ -22,7 +22,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	api := operations.NewAcrWebhooksAPI(swaggerSpec)
+	api := operations.NewACRWebhooksAPI(swaggerSpec)
 	server := acr.NewServer(api)
 	defer server.Shutdown()
 
