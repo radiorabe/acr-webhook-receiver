@@ -19,14 +19,14 @@ type Data struct {
 
 	// metadata
 	// Required: true
-	Metadata *Metadata `json:"metadata"`
+	Metadata *Metadata `json:"metadata" gorm:"type:jsonb;"`
 
 	// result type
 	ResultType int32 `json:"result_type,omitempty"`
 
 	// status
 	// Required: true
-	Status *Status `json:"status"`
+	Status *Status `json:"status" gorm:"type:jsonb;"`
 }
 
 // Validate validates this data

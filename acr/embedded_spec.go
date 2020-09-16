@@ -231,6 +231,7 @@ func init() {
       ],
       "properties": {
         "metadata": {
+          "x-go-custom-tag": "gorm:\"type:jsonb;\"",
           "$ref": "#/definitions/Metadata"
         },
         "result_type": {
@@ -238,6 +239,7 @@ func init() {
           "format": "int32"
         },
         "status": {
+          "x-go-custom-tag": "gorm:\"type:jsonb;\"",
           "$ref": "#/definitions/Status"
         }
       }
@@ -713,6 +715,7 @@ func init() {
       ],
       "properties": {
         "metadata": {
+          "x-go-custom-tag": "gorm:\"type:jsonb;\"",
           "$ref": "#/definitions/Metadata"
         },
         "result_type": {
@@ -720,6 +723,7 @@ func init() {
           "format": "int32"
         },
         "status": {
+          "x-go-custom-tag": "gorm:\"type:jsonb;\"",
           "$ref": "#/definitions/Status"
         }
       }
