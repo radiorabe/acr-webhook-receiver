@@ -54,6 +54,9 @@ func init() {
         "operationId": "addResult",
         "parameters": [
           {
+            "$ref": "#/parameters/requestID"
+          },
+          {
             "description": "ACRCloud results entry",
             "name": "body",
             "in": "body",
@@ -85,6 +88,9 @@ func init() {
         "summary": "ACRCloud Custom Streams Full Day Endpoint",
         "operationId": "getCustomStream",
         "parameters": [
+          {
+            "$ref": "#/parameters/requestID"
+          },
           {
             "type": "string",
             "default": "s-qXuJARB",
@@ -136,6 +142,9 @@ func init() {
         "operationId": "getResults",
         "parameters": [
           {
+            "$ref": "#/parameters/requestID"
+          },
+          {
             "$ref": "#/parameters/offsetParam"
           },
           {
@@ -179,6 +188,9 @@ func init() {
         "summary": "ACRCloud result",
         "operationId": "getResult",
         "parameters": [
+          {
+            "$ref": "#/parameters/requestID"
+          },
           {
             "type": "integer",
             "name": "resultId",
@@ -603,6 +615,11 @@ func init() {
       "description": "The number of items to skip before starting to collect the result set.",
       "name": "offset",
       "in": "query"
+    },
+    "requestID": {
+      "type": "string",
+      "name": "X-Request-ID",
+      "in": "header"
     }
   },
   "securityDefinitions": {
@@ -655,6 +672,11 @@ func init() {
         "operationId": "addResult",
         "parameters": [
           {
+            "type": "string",
+            "name": "X-Request-ID",
+            "in": "header"
+          },
+          {
             "description": "ACRCloud results entry",
             "name": "body",
             "in": "body",
@@ -686,6 +708,11 @@ func init() {
         "summary": "ACRCloud Custom Streams Full Day Endpoint",
         "operationId": "getCustomStream",
         "parameters": [
+          {
+            "type": "string",
+            "name": "X-Request-ID",
+            "in": "header"
+          },
           {
             "type": "string",
             "default": "s-qXuJARB",
@@ -736,6 +763,11 @@ func init() {
         "summary": "Get ACRCloud Results",
         "operationId": "getResults",
         "parameters": [
+          {
+            "type": "string",
+            "name": "X-Request-ID",
+            "in": "header"
+          },
           {
             "minimum": 0,
             "type": "integer",
@@ -791,6 +823,11 @@ func init() {
         "summary": "ACRCloud result",
         "operationId": "getResult",
         "parameters": [
+          {
+            "type": "string",
+            "name": "X-Request-ID",
+            "in": "header"
+          },
           {
             "type": "integer",
             "name": "resultId",
@@ -1217,6 +1254,11 @@ func init() {
       "description": "The number of items to skip before starting to collect the result set.",
       "name": "offset",
       "in": "query"
+    },
+    "requestID": {
+      "type": "string",
+      "name": "X-Request-ID",
+      "in": "header"
     }
   },
   "securityDefinitions": {

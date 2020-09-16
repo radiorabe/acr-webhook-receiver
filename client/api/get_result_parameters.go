@@ -61,6 +61,8 @@ for the get result operation typically these are written to a http.Request
 */
 type GetResultParams struct {
 
+	/*XRequestID*/
+	XRequestID *string
 	/*ResultID*/
 	ResultID int64
 
@@ -102,6 +104,17 @@ func (o *GetResultParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithXRequestID adds the xRequestID to the get result params
+func (o *GetResultParams) WithXRequestID(xRequestID *string) *GetResultParams {
+	o.SetXRequestID(xRequestID)
+	return o
+}
+
+// SetXRequestID adds the xRequestId to the get result params
+func (o *GetResultParams) SetXRequestID(xRequestID *string) {
+	o.XRequestID = xRequestID
+}
+
 // WithResultID adds the resultID to the get result params
 func (o *GetResultParams) WithResultID(resultID int64) *GetResultParams {
 	o.SetResultID(resultID)
@@ -120,6 +133,15 @@ func (o *GetResultParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		return err
 	}
 	var res []error
+
+	if o.XRequestID != nil {
+
+		// header param X-Request-ID
+		if err := r.SetHeaderParam("X-Request-ID", *o.XRequestID); err != nil {
+			return err
+		}
+
+	}
 
 	// path param resultId
 	if err := r.SetPathParam("resultId", swag.FormatInt64(o.ResultID)); err != nil {

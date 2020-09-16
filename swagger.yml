@@ -26,6 +26,7 @@ paths:
       security:
       - api_key: []
       parameters:
+      - $ref: '#/parameters/requestID'
       - in: "body"
         name: "body"
         description: "ACRCloud results entry"
@@ -47,6 +48,7 @@ paths:
       tags:
       - "api"
       parameters:
+        - $ref: '#/parameters/requestID'
         - $ref: '#/parameters/offsetParam'
         - $ref: '#/parameters/limitParam'
         - in: query
@@ -76,6 +78,7 @@ paths:
       tags:
       - "api"
       parameters:
+      - $ref: '#/parameters/requestID'
       - in: path
         name: resultId
         required: true
@@ -95,6 +98,7 @@ paths:
       tags:
       - "compat"
       parameters:
+      - $ref: '#/parameters/requestID'
       - in: path
         name: streamId
         description: Stream ID, default is the non-realtime RaBe program.
@@ -146,6 +150,10 @@ parameters:
     maximum: 50
     default: 20
     description: The numbers of items to return.
+  requestID:
+    in: header
+    name: X-Request-ID
+    type: string
 definitions:
   Result:
     type: "object"

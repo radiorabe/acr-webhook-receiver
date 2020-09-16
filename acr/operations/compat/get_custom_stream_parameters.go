@@ -39,6 +39,10 @@ type GetCustomStreamParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
+	/*
+	  In: header
+	*/
+	XRequestID *string
 	/*Ignored but available for compatibility with upstream.
 	  In: query
 	*/
@@ -67,6 +71,10 @@ func (o *GetCustomStreamParams) BindRequest(r *http.Request, route *middleware.M
 
 	qs := runtime.Values(r.URL.Query())
 
+	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-ID")], true, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qAccessKey, qhkAccessKey, _ := qs.GetOK("access_key")
 	if err := o.bindAccessKey(qAccessKey, qhkAccessKey, route.Formats); err != nil {
 		res = append(res, err)
@@ -85,6 +93,24 @@ func (o *GetCustomStreamParams) BindRequest(r *http.Request, route *middleware.M
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindXRequestID binds and validates parameter XRequestID from header.
+func (o *GetCustomStreamParams) bindXRequestID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.XRequestID = &raw
+
 	return nil
 }
 

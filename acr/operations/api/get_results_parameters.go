@@ -44,6 +44,10 @@ type GetResultsParams struct {
 	HTTPRequest *http.Request `json:"-"`
 
 	/*
+	  In: header
+	*/
+	XRequestID *string
+	/*
 	  In: query
 	*/
 	From *strfmt.DateTime
@@ -77,6 +81,10 @@ func (o *GetResultsParams) BindRequest(r *http.Request, route *middleware.Matche
 
 	qs := runtime.Values(r.URL.Query())
 
+	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-ID")], true, route.Formats); err != nil {
+		res = append(res, err)
+	}
+
 	qFrom, qhkFrom, _ := qs.GetOK("from")
 	if err := o.bindFrom(qFrom, qhkFrom, route.Formats); err != nil {
 		res = append(res, err)
@@ -100,6 +108,24 @@ func (o *GetResultsParams) BindRequest(r *http.Request, route *middleware.Matche
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindXRequestID binds and validates parameter XRequestID from header.
+func (o *GetResultsParams) bindXRequestID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.XRequestID = &raw
+
 	return nil
 }
 

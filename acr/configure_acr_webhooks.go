@@ -3,10 +3,14 @@
 package acr
 
 import (
+	"context"
 	"crypto/tls"
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/gofrs/uuid"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -26,7 +30,12 @@ import (
 //go:generate swagger generate server --spec ../swagger.yml --target ../ --additional-initialism=ACR --principal models.Principal --default-scheme=https --name ACRWebhooks --server-package acr
 //go:generate swagger generate client --spec ../swagger.yml --target ../ --additional-initialism=ACR --principal models.Principal --default-scheme=https --tags=api --tags=compat
 
-const resultsRecordTsUTCQuery = "to_timestamp((result -> 'data' -> 'metadata' ->> 'timestamp_utc') || ' 0000', 'YYYY-MM-DD HH24:MI:SS TZH')"
+type requestIDKeyType string
+
+const (
+	resultsRecordTsUTCQuery                  = "to_timestamp((result -> 'data' -> 'metadata' ->> 'timestamp_utc') || ' 0000', 'YYYY-MM-DD HH24:MI:SS TZH')"
+	requestIDKey            requestIDKeyType = ""
+)
 
 var dbConn *gorm.DB
 
@@ -193,7 +202,16 @@ func configureServer(s *http.Server, scheme, addr string) {
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.
 // The middleware executes after routing but before authentication, binding and validation
 func setupMiddlewares(handler http.Handler) http.Handler {
-	return handler
+
+	nextRequestID := func() string {
+		return fmt.Sprintf("%v", uuid.Must(uuid.NewV4()))
+	}
+
+	logger := log.New()
+	logWriter := logger.Writer()
+	defer logWriter.Close()
+
+	return tracing(nextRequestID)(logging(logger)(handler))
 }
 
 // The middleware configuration happens before anything, this middleware also applies to serving the swagger.json document.
@@ -213,4 +231,33 @@ func getDatabase() *gorm.DB {
 		dbConn = conn
 	}
 	return dbConn
+}
+
+func logging(logger *log.Logger) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			defer func() {
+				requestID, ok := r.Context().Value(requestIDKey).(string)
+				if !ok {
+					requestID = "unknown"
+				}
+				logger.Println(requestID, r.Method, r.URL.Path, r.RemoteAddr, r.UserAgent())
+			}()
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+func tracing(nextRequestID func() string) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			requestID := r.Header.Get("X-Request-Id")
+			if requestID == "" {
+				requestID = nextRequestID()
+			}
+			ctx := context.WithValue(r.Context(), requestIDKey, requestID)
+			w.Header().Set("X-Request-Id", requestID)
+			next.ServeHTTP(w, r.WithContext(ctx))
+		})
+	}
 }

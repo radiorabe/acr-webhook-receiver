@@ -81,6 +81,8 @@ for the get results operation typically these are written to a http.Request
 */
 type GetResultsParams struct {
 
+	/*XRequestID*/
+	XRequestID *string
 	/*From*/
 	From *strfmt.DateTime
 	/*Limit
@@ -134,6 +136,17 @@ func (o *GetResultsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithXRequestID adds the xRequestID to the get results params
+func (o *GetResultsParams) WithXRequestID(xRequestID *string) *GetResultsParams {
+	o.SetXRequestID(xRequestID)
+	return o
+}
+
+// SetXRequestID adds the xRequestId to the get results params
+func (o *GetResultsParams) SetXRequestID(xRequestID *string) {
+	o.XRequestID = xRequestID
+}
+
 // WithFrom adds the from to the get results params
 func (o *GetResultsParams) WithFrom(from *strfmt.DateTime) *GetResultsParams {
 	o.SetFrom(from)
@@ -185,6 +198,15 @@ func (o *GetResultsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 		return err
 	}
 	var res []error
+
+	if o.XRequestID != nil {
+
+		// header param X-Request-ID
+		if err := r.SetHeaderParam("X-Request-ID", *o.XRequestID); err != nil {
+			return err
+		}
+
+	}
 
 	if o.From != nil {
 

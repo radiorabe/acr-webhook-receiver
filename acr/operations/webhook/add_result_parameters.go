@@ -12,6 +12,7 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
 
 	"github.com/radiorabe/acr-webhook-receiver/models"
 )
@@ -32,6 +33,10 @@ type AddResultParams struct {
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
+	/*
+	  In: header
+	*/
+	XRequestID *string
 	/*ACRCloud results entry
 	  Required: true
 	  In: body
@@ -47,6 +52,10 @@ func (o *AddResultParams) BindRequest(r *http.Request, route *middleware.Matched
 	var res []error
 
 	o.HTTPRequest = r
+
+	if err := o.bindXRequestID(r.Header[http.CanonicalHeaderKey("X-Request-ID")], true, route.Formats); err != nil {
+		res = append(res, err)
+	}
 
 	if runtime.HasBody(r) {
 		defer r.Body.Close()
@@ -73,5 +82,23 @@ func (o *AddResultParams) BindRequest(r *http.Request, route *middleware.Matched
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+// bindXRequestID binds and validates parameter XRequestID from header.
+func (o *AddResultParams) bindXRequestID(rawData []string, hasKey bool, formats strfmt.Registry) error {
+	var raw string
+	if len(rawData) > 0 {
+		raw = rawData[len(rawData)-1]
+	}
+
+	// Required: false
+
+	if raw == "" { // empty values pass all other validations
+		return nil
+	}
+
+	o.XRequestID = &raw
+
 	return nil
 }

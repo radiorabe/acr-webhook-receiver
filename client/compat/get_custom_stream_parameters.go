@@ -72,6 +72,8 @@ for the get custom stream operation typically these are written to a http.Reques
 */
 type GetCustomStreamParams struct {
 
+	/*XRequestID*/
+	XRequestID *string
 	/*AccessKey
 	  Ignored but available for compatibility with upstream.
 
@@ -126,6 +128,17 @@ func (o *GetCustomStreamParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithXRequestID adds the xRequestID to the get custom stream params
+func (o *GetCustomStreamParams) WithXRequestID(xRequestID *string) *GetCustomStreamParams {
+	o.SetXRequestID(xRequestID)
+	return o
+}
+
+// SetXRequestID adds the xRequestId to the get custom stream params
+func (o *GetCustomStreamParams) SetXRequestID(xRequestID *string) {
+	o.XRequestID = xRequestID
+}
+
 // WithAccessKey adds the accessKey to the get custom stream params
 func (o *GetCustomStreamParams) WithAccessKey(accessKey *string) *GetCustomStreamParams {
 	o.SetAccessKey(accessKey)
@@ -166,6 +179,15 @@ func (o *GetCustomStreamParams) WriteToRequest(r runtime.ClientRequest, reg strf
 		return err
 	}
 	var res []error
+
+	if o.XRequestID != nil {
+
+		// header param X-Request-ID
+		if err := r.SetHeaderParam("X-Request-ID", *o.XRequestID); err != nil {
+			return err
+		}
+
+	}
 
 	if o.AccessKey != nil {
 
