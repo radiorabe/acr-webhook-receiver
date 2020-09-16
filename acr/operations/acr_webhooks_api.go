@@ -315,7 +315,7 @@ func (o *ACRWebhooksAPI) initHandlerCache() {
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}
-	o.handlers["GET"]["/v1/acrcloud-monitor-streams/{streamId}/results"] = compat.NewGetCustomStream(o.context, o.CompatGetCustomStreamHandler)
+	o.handlers["GET"]["/v1/monitor-streams/{streamId}/results"] = compat.NewGetCustomStream(o.context, o.CompatGetCustomStreamHandler)
 	if o.handlers["GET"] == nil {
 		o.handlers["GET"] = make(map[string]http.Handler)
 	}

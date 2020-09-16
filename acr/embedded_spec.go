@@ -76,7 +76,7 @@ func init() {
         }
       }
     },
-    "/v1/acrcloud-monitor-streams/{streamId}/results": {
+    "/v1/monitor-streams/{streamId}/results": {
       "get": {
         "description": "This endpoint implements the same API as upstream ACRCloud does.",
         "tags": [
@@ -113,7 +113,7 @@ func init() {
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/Webhook"
+                "$ref": "#/definitions/Data"
               }
             }
           },
@@ -547,7 +547,7 @@ func init() {
         }
       }
     },
-    "/v1/acrcloud-monitor-streams/{streamId}/results": {
+    "/v1/monitor-streams/{streamId}/results": {
       "get": {
         "description": "This endpoint implements the same API as upstream ACRCloud does.",
         "tags": [
@@ -584,7 +584,7 @@ func init() {
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/Webhook"
+                "$ref": "#/definitions/Data"
               }
             }
           },

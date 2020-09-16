@@ -139,7 +139,7 @@ func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 	})
 
 	api.CompatGetCustomStreamHandler = compat.GetCustomStreamHandlerFunc(func(params compat.GetCustomStreamParams) middleware.Responder {
-		var result []*models.Result
+		var result []*models.Data
 
 		date, err := time.Parse("20060102", params.Date)
 		if err != nil {
@@ -148,9 +148,11 @@ func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 
 		tx := getDatabase().Model(
 			&models.Result{},
-		).Select(
-			"result",
-		).Where(
+		).Select([]string{
+			"result -> 'data' -> 'metadata' AS metadata",
+			"result -> 'result_type' AS result_type",
+			"result -> 'data' -> 'status' AS status",
+		}).Where(
 			fmt.Sprintf("%s >= ?", resultsRecordTsUTCQuery),
 			date.Format("2006-01-02T15:04:05Z"),
 		).Where(
@@ -163,9 +165,9 @@ func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 		)
 
 		if tx.Error != nil {
-			return apiop.NewGetResultsInternalServerError()
+			return compat.NewGetCustomStreamInternalServerError()
 		}
-		return apiop.NewGetResultsOK().WithPayload(result)
+		return compat.NewGetCustomStreamOK().WithPayload(result)
 	})
 
 	api.PreServerShutdown = func() {}

@@ -57,14 +57,14 @@ func NewGetCustomStreamOK() *GetCustomStreamOK {
 Results without local ID
 */
 type GetCustomStreamOK struct {
-	Payload []*models.Webhook
+	Payload []*models.Data
 }
 
 func (o *GetCustomStreamOK) Error() string {
-	return fmt.Sprintf("[GET /v1/acrcloud-monitor-streams/{streamId}/results][%d] getCustomStreamOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /v1/monitor-streams/{streamId}/results][%d] getCustomStreamOK  %+v", 200, o.Payload)
 }
 
-func (o *GetCustomStreamOK) GetPayload() []*models.Webhook {
+func (o *GetCustomStreamOK) GetPayload() []*models.Data {
 	return o.Payload
 }
 
@@ -91,7 +91,7 @@ type GetCustomStreamBadRequest struct {
 }
 
 func (o *GetCustomStreamBadRequest) Error() string {
-	return fmt.Sprintf("[GET /v1/acrcloud-monitor-streams/{streamId}/results][%d] getCustomStreamBadRequest ", 400)
+	return fmt.Sprintf("[GET /v1/monitor-streams/{streamId}/results][%d] getCustomStreamBadRequest ", 400)
 }
 
 func (o *GetCustomStreamBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -112,7 +112,7 @@ type GetCustomStreamInternalServerError struct {
 }
 
 func (o *GetCustomStreamInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /v1/acrcloud-monitor-streams/{streamId}/results][%d] getCustomStreamInternalServerError ", 500)
+	return fmt.Sprintf("[GET /v1/monitor-streams/{streamId}/results][%d] getCustomStreamInternalServerError ", 500)
 }
 
 func (o *GetCustomStreamInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

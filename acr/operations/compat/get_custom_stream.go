@@ -29,7 +29,7 @@ func NewGetCustomStream(ctx *middleware.Context, handler GetCustomStreamHandler)
 	return &GetCustomStream{Context: ctx, Handler: handler}
 }
 
-/*GetCustomStream swagger:route GET /v1/acrcloud-monitor-streams/{streamId}/results compat getCustomStream
+/*GetCustomStream swagger:route GET /v1/monitor-streams/{streamId}/results compat getCustomStream
 
 ACRCloud Custom Streams Full Day Endpoint
 

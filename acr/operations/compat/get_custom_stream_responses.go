@@ -25,7 +25,7 @@ type GetCustomStreamOK struct {
 	/*
 	  In: Body
 	*/
-	Payload []*models.Webhook `json:"body,omitempty"`
+	Payload []*models.Data `json:"body,omitempty"`
 }
 
 // NewGetCustomStreamOK creates GetCustomStreamOK with default headers values
@@ -35,13 +35,13 @@ func NewGetCustomStreamOK() *GetCustomStreamOK {
 }
 
 // WithPayload adds the payload to the get custom stream o k response
-func (o *GetCustomStreamOK) WithPayload(payload []*models.Webhook) *GetCustomStreamOK {
+func (o *GetCustomStreamOK) WithPayload(payload []*models.Data) *GetCustomStreamOK {
 	o.Payload = payload
 	return o
 }
 
 // SetPayload sets the payload to the get custom stream o k response
-func (o *GetCustomStreamOK) SetPayload(payload []*models.Webhook) {
+func (o *GetCustomStreamOK) SetPayload(payload []*models.Data) {
 	o.Payload = payload
 }
 
@@ -52,7 +52,7 @@ func (o *GetCustomStreamOK) WriteResponse(rw http.ResponseWriter, producer runti
 	payload := o.Payload
 	if payload == nil {
 		// return empty array
-		payload = make([]*models.Webhook, 0, 50)
+		payload = make([]*models.Data, 0, 50)
 	}
 
 	if err := producer.Produce(rw, payload); err != nil {

@@ -43,7 +43,7 @@ func (o *GetCustomStreamURL) SetBasePath(bp string) {
 func (o *GetCustomStreamURL) Build() (*url.URL, error) {
 	var _result url.URL
 
-	var _path = "/v1/acrcloud-monitor-streams/{streamId}/results"
+	var _path = "/v1/monitor-streams/{streamId}/results"
 
 	streamID := o.StreamID
 	if streamID != "" {

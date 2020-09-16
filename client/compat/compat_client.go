@@ -46,7 +46,7 @@ func (a *Client) GetCustomStream(params *GetCustomStreamParams) (*GetCustomStrea
 	result, err := a.transport.Submit(&runtime.ClientOperation{
 		ID:                 "getCustomStream",
 		Method:             "GET",
-		PathPattern:        "/v1/acrcloud-monitor-streams/{streamId}/results",
+		PathPattern:        "/v1/monitor-streams/{streamId}/results",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http", "https"},

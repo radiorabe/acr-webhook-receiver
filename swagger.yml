@@ -87,7 +87,7 @@ paths:
             $ref: '#/definitions/Result'
         "500":
           description: "Server Error"
-  /v1/acrcloud-monitor-streams/{streamId}/results:
+  /v1/monitor-streams/{streamId}/results:
     get:
       summary: "ACRCloud Custom Streams Full Day Endpoint"
       description: "This endpoint implements the same API as upstream ACRCloud does."
@@ -117,7 +117,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: '#/definitions/Webhook'
+              $ref: '#/definitions/Data'
         "400":
           description: "Bad Request"
         "500":
@@ -178,11 +178,13 @@ definitions:
     properties:
       status:
         $ref: '#/definitions/Status'
+        x-go-custom-tag: gorm:"type:jsonb;"
       result_type:
         type: integer
         format: int32
       metadata:
         $ref: '#/definitions/Metadata'
+        x-go-custom-tag: gorm:"type:jsonb;"
     required:
       - status
       - metadata
