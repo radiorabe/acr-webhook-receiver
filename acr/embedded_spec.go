@@ -220,6 +220,29 @@ func init() {
       "properties": {
         "name": {
           "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Contributors": {
+      "type": "object",
+      "properties": {
+        "composers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lyricists": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -241,6 +264,17 @@ func init() {
         "status": {
           "x-go-custom-tag": "gorm:\"type:jsonb;\"",
           "$ref": "#/definitions/Status"
+        }
+      }
+    },
+    "Distributor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       }
     },
@@ -302,6 +336,25 @@ func init() {
         }
       }
     },
+    "Genre": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Lyrics": {
+      "type": "object",
+      "properties": {
+        "copyrights": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "Metadata": {
       "type": "object",
       "required": [
@@ -352,6 +405,9 @@ func init() {
             "$ref": "#/definitions/Artist"
           }
         },
+        "contributors": {
+          "$ref": "#/definitions/Contributors"
+        },
         "db_begin_time_offset_ms": {
           "type": "integer",
           "format": "int64"
@@ -366,12 +422,27 @@ func init() {
         "external_metadata": {
           "$ref": "#/definitions/ExternalMetadata"
         },
+        "genres": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Genre"
+          }
+        },
         "label": {
           "type": "string"
+        },
+        "lyrics": {
+          "$ref": "#/definitions/Lyrics"
         },
         "play_offset_ms": {
           "type": "integer",
           "format": "int64"
+        },
+        "release_by_territories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Territory"
+          }
         },
         "release_date": {
           "type": "string",
@@ -380,6 +451,12 @@ func init() {
         "result_from": {
           "type": "integer",
           "format": "int32"
+        },
+        "rights_claim": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RightsClaim"
+          }
         },
         "sample_begin_time_offset_ms": {
           "type": "integer",
@@ -411,6 +488,43 @@ func init() {
         }
       }
     },
+    "RightsClaim": {
+      "type": "object",
+      "properties": {
+        "distributor": {
+          "$ref": "#/definitions/Distributor"
+        },
+        "rights_claim_policy": {
+          "type": "string"
+        },
+        "rights_owners": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RightsOwner"
+          }
+        },
+        "start_date": {
+          "type": "string"
+        },
+        "territories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "RightsOwner": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "share_percentage": {
+          "type": "string"
+        }
+      }
+    },
     "Status": {
       "type": "object",
       "required": [
@@ -428,6 +542,20 @@ func init() {
         },
         "version": {
           "type": "string"
+        }
+      }
+    },
+    "Territory": {
+      "type": "object",
+      "properties": {
+        "release_date": {
+          "type": "string"
+        },
+        "territories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -704,6 +832,29 @@ func init() {
       "properties": {
         "name": {
           "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "Contributors": {
+      "type": "object",
+      "properties": {
+        "composers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lyricists": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -725,6 +876,17 @@ func init() {
         "status": {
           "x-go-custom-tag": "gorm:\"type:jsonb;\"",
           "$ref": "#/definitions/Status"
+        }
+      }
+    },
+    "Distributor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       }
     },
@@ -786,6 +948,25 @@ func init() {
         }
       }
     },
+    "Genre": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Lyrics": {
+      "type": "object",
+      "properties": {
+        "copyrights": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "Metadata": {
       "type": "object",
       "required": [
@@ -836,6 +1017,9 @@ func init() {
             "$ref": "#/definitions/Artist"
           }
         },
+        "contributors": {
+          "$ref": "#/definitions/Contributors"
+        },
         "db_begin_time_offset_ms": {
           "type": "integer",
           "format": "int64"
@@ -850,12 +1034,27 @@ func init() {
         "external_metadata": {
           "$ref": "#/definitions/ExternalMetadata"
         },
+        "genres": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Genre"
+          }
+        },
         "label": {
           "type": "string"
+        },
+        "lyrics": {
+          "$ref": "#/definitions/Lyrics"
         },
         "play_offset_ms": {
           "type": "integer",
           "format": "int64"
+        },
+        "release_by_territories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Territory"
+          }
         },
         "release_date": {
           "type": "string",
@@ -864,6 +1063,12 @@ func init() {
         "result_from": {
           "type": "integer",
           "format": "int32"
+        },
+        "rights_claim": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RightsClaim"
+          }
         },
         "sample_begin_time_offset_ms": {
           "type": "integer",
@@ -896,6 +1101,43 @@ func init() {
         }
       }
     },
+    "RightsClaim": {
+      "type": "object",
+      "properties": {
+        "distributor": {
+          "$ref": "#/definitions/Distributor"
+        },
+        "rights_claim_policy": {
+          "type": "string"
+        },
+        "rights_owners": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RightsOwner"
+          }
+        },
+        "start_date": {
+          "type": "string"
+        },
+        "territories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "RightsOwner": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "share_percentage": {
+          "type": "string"
+        }
+      }
+    },
     "Status": {
       "type": "object",
       "required": [
@@ -913,6 +1155,20 @@ func init() {
         },
         "version": {
           "type": "string"
+        }
+      }
+    },
+    "Territory": {
+      "type": "object",
+      "properties": {
+        "release_date": {
+          "type": "string"
+        },
+        "territories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

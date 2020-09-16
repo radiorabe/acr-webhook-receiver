@@ -29,6 +29,9 @@ type Music struct {
 	// artists
 	Artists []*Artist `json:"artists"`
 
+	// contributors
+	Contributors *Contributors `json:"contributors,omitempty"`
+
 	// db begin time offset ms
 	// Required: true
 	DbBeginTimeOffsetMs *int64 `json:"db_begin_time_offset_ms"`
@@ -45,12 +48,21 @@ type Music struct {
 	// Required: true
 	ExternalMetadata *ExternalMetadata `json:"external_metadata"`
 
+	// genres
+	Genres []*Genre `json:"genres"`
+
 	// label
 	Label string `json:"label,omitempty"`
+
+	// lyrics
+	Lyrics *Lyrics `json:"lyrics,omitempty"`
 
 	// play offset ms
 	// Required: true
 	PlayOffsetMs *int64 `json:"play_offset_ms"`
+
+	// release by territories
+	ReleaseByTerritories []*Territory `json:"release_by_territories"`
 
 	// release date
 	// Format: date
@@ -59,6 +71,9 @@ type Music struct {
 	// result from
 	// Required: true
 	ResultFrom *int32 `json:"result_from"`
+
+	// rights claim
+	RightsClaim []*RightsClaim `json:"rights_claim"`
 
 	// sample begin time offset ms
 	// Required: true
@@ -95,6 +110,10 @@ func (m *Music) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateContributors(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validateDbBeginTimeOffsetMs(formats); err != nil {
 		res = append(res, err)
 	}
@@ -111,7 +130,19 @@ func (m *Music) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateGenres(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateLyrics(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.validatePlayOffsetMs(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateReleaseByTerritories(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -120,6 +151,10 @@ func (m *Music) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateResultFrom(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateRightsClaim(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -197,6 +232,24 @@ func (m *Music) validateArtists(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Music) validateContributors(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Contributors) { // not required
+		return nil
+	}
+
+	if m.Contributors != nil {
+		if err := m.Contributors.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("contributors")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Music) validateDbBeginTimeOffsetMs(formats strfmt.Registry) error {
 
 	if err := validate.Required("db_begin_time_offset_ms", "body", m.DbBeginTimeOffsetMs); err != nil {
@@ -251,10 +304,78 @@ func (m *Music) validateExternalMetadata(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *Music) validateGenres(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Genres) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.Genres); i++ {
+		if swag.IsZero(m.Genres[i]) { // not required
+			continue
+		}
+
+		if m.Genres[i] != nil {
+			if err := m.Genres[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("genres" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Music) validateLyrics(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Lyrics) { // not required
+		return nil
+	}
+
+	if m.Lyrics != nil {
+		if err := m.Lyrics.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("lyrics")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *Music) validatePlayOffsetMs(formats strfmt.Registry) error {
 
 	if err := validate.Required("play_offset_ms", "body", m.PlayOffsetMs); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Music) validateReleaseByTerritories(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.ReleaseByTerritories) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.ReleaseByTerritories); i++ {
+		if swag.IsZero(m.ReleaseByTerritories[i]) { // not required
+			continue
+		}
+
+		if m.ReleaseByTerritories[i] != nil {
+			if err := m.ReleaseByTerritories[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("release_by_territories" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil
@@ -277,6 +398,31 @@ func (m *Music) validateResultFrom(formats strfmt.Registry) error {
 
 	if err := validate.Required("result_from", "body", m.ResultFrom); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+func (m *Music) validateRightsClaim(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.RightsClaim) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(m.RightsClaim); i++ {
+		if swag.IsZero(m.RightsClaim[i]) { // not required
+			continue
+		}
+
+		if m.RightsClaim[i] != nil {
+			if err := m.RightsClaim[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("rights_claim" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil

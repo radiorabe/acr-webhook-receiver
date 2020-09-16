@@ -20,6 +20,9 @@ type Artist struct {
 	// name
 	// Required: true
 	Name *string `json:"name"`
+
+	// roles
+	Roles []string `json:"roles"`
 }
 
 // Validate validates this artist

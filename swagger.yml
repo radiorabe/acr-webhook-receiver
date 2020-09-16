@@ -237,11 +237,27 @@ definitions:
           $ref: '#/definitions/Artist'
       album:
         $ref: '#/definitions/Album'
+      genres:
+        type: array
+        items:
+          $ref: '#/definitions/Genre'
+      contributors:
+        $ref: '#/definitions/Contributors'
       label:
         type: string
       release_date:
         type: string
         format: date
+      release_by_territories:
+        type: array
+        items:
+          $ref: '#/definitions/Territory'
+      rights_claim:
+        type: array
+        items:
+          $ref: '#/definitions/RightsClaim'
+      lyrics:
+        $ref: '#/definitions/Lyrics'
       play_offset_ms:
         type: integer
         format: int64
@@ -285,8 +301,75 @@ definitions:
     properties:
       name:
         type: string
+      roles:
+        type: array
+        items:
+          type: string
     required:
       - name
+  Contributors:
+    type: object
+    properties:
+      composers:
+        type: array
+        items:
+          type: string
+      lyricists:
+        type: array
+        items:
+          type: string
+  Genre:
+    type: object
+    properties:
+      name:
+        type: string
+  Lyrics:
+    type: object
+    properties:
+      copyrights:
+        type: array
+        items:
+          type: string
+  Territory:
+    type: object
+    properties:
+      territories:
+        type: array
+        items:
+          type: string
+      release_date:
+        type: string
+  RightsClaim:
+    type: object
+    properties:
+      distributor:
+        $ref: '#/definitions/Distributor'
+      territories:
+        type: array
+        items:
+          type: string
+      start_date:
+        type: string
+      rights_claim_policy:
+        type: string
+      rights_owners:
+        type: array
+        items:
+          $ref: '#/definitions/RightsOwner'
+  Distributor:
+    type: object
+    properties:
+      name:
+        type: string
+      id:
+        type: string
+  RightsOwner:
+    type: object
+    properties:
+      share_percentage:
+        type: string
+      name:
+        type: string
   ExternalIds:
     type: object
     properties:
