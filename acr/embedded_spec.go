@@ -457,8 +457,7 @@ func init() {
           }
         },
         "release_date": {
-          "type": "string",
-          "format": "date"
+          "type": "string"
         },
         "result_from": {
           "type": "integer",
@@ -533,7 +532,7 @@ func init() {
           "type": "string"
         },
         "share_percentage": {
-          "type": "string"
+          "type": "integer"
         }
       }
     },
@@ -630,6 +629,20 @@ func init() {
       "in": "query"
     }
   },
+  "tags": [
+    {
+      "description": "Webhooks called by ACRCloud.",
+      "name": "webhook"
+    },
+    {
+      "description": "API to interact with the stored data.",
+      "name": "api"
+    },
+    {
+      "description": "Compatibility endpoints that match the ACRCloud API.",
+      "name": "compat"
+    }
+  ],
   "externalDocs": {
     "description": "Find out more about Radio Bern RaBe",
     "url": "https://rabe.ch"
@@ -1094,8 +1107,7 @@ func init() {
           }
         },
         "release_date": {
-          "type": "string",
-          "format": "date"
+          "type": "string"
         },
         "result_from": {
           "type": "integer",
@@ -1171,7 +1183,7 @@ func init() {
           "type": "string"
         },
         "share_percentage": {
-          "type": "string"
+          "type": "integer"
         }
       }
     },
@@ -1269,6 +1281,20 @@ func init() {
       "in": "query"
     }
   },
+  "tags": [
+    {
+      "description": "Webhooks called by ACRCloud.",
+      "name": "webhook"
+    },
+    {
+      "description": "API to interact with the stored data.",
+      "name": "api"
+    },
+    {
+      "description": "Compatibility endpoints that match the ACRCloud API.",
+      "name": "compat"
+    }
+  ],
   "externalDocs": {
     "description": "Find out more about Radio Bern RaBe",
     "url": "https://rabe.ch"

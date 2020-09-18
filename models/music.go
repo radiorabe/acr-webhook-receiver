@@ -65,8 +65,7 @@ type Music struct {
 	ReleaseByTerritories []*Territory `json:"release_by_territories"`
 
 	// release date
-	// Format: date
-	ReleaseDate strfmt.Date `json:"release_date,omitempty"`
+	ReleaseDate string `json:"release_date,omitempty"`
 
 	// result from
 	// Required: true
@@ -143,10 +142,6 @@ func (m *Music) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateReleaseByTerritories(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateReleaseDate(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -376,19 +371,6 @@ func (m *Music) validateReleaseByTerritories(formats strfmt.Registry) error {
 			}
 		}
 
-	}
-
-	return nil
-}
-
-func (m *Music) validateReleaseDate(formats strfmt.Registry) error {
-
-	if swag.IsZero(m.ReleaseDate) { // not required
-		return nil
-	}
-
-	if err := validate.FormatOf("release_date", "body", "date", m.ReleaseDate.String(), formats); err != nil {
-		return err
 	}
 
 	return nil

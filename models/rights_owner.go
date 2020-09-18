@@ -19,7 +19,7 @@ type RightsOwner struct {
 	Name string `json:"name,omitempty"`
 
 	// share percentage
-	SharePercentage string `json:"share_percentage,omitempty"`
+	SharePercentage int64 `json:"share_percentage,omitempty"`
 }
 
 // Validate validates this rights owner

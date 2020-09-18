@@ -15,6 +15,13 @@ consumes:
 - "application/json"
 produces:
 - "application/json"
+tags:
+- name: webhook
+  description: Webhooks called by ACRCloud.
+- name: api
+  description: API to interact with the stored data.
+- name: compat
+  description: Compatibility endpoints that match the ACRCloud API.
 paths:
   /v1/_webhooks/results:
     post:
@@ -255,7 +262,6 @@ definitions:
         type: string
       release_date:
         type: string
-        format: date
       release_by_territories:
         type: array
         items:
@@ -375,7 +381,7 @@ definitions:
     type: object
     properties:
       share_percentage:
-        type: string
+        type: integer
       name:
         type: string
   ExternalIds:
