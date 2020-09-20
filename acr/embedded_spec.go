@@ -593,9 +593,6 @@ func init() {
           "type": "string"
         }
       }
-    },
-    "principal": {
-      "type": "string"
     }
   },
   "parameters": {
@@ -1242,9 +1239,6 @@ func init() {
           "type": "string"
         }
       }
-    },
-    "principal": {
-      "type": "string"
     }
   },
   "parameters": {

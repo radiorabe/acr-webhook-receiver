@@ -421,8 +421,6 @@ definitions:
         type: object
       youtube:
         type: object
-  principal:
-    type: "string"
 externalDocs:
   description: "Find out more about Radio Bern RaBe"
   url: "https://rabe.ch"
