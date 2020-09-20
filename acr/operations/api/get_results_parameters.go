@@ -52,7 +52,6 @@ type GetResultsParams struct {
 	*/
 	From *strfmt.DateTime
 	/*The numbers of items to return.
-	  Maximum: 50
 	  Minimum: 1
 	  In: query
 	  Default: 20
@@ -196,10 +195,6 @@ func (o *GetResultsParams) bindLimit(rawData []string, hasKey bool, formats strf
 func (o *GetResultsParams) validateLimit(formats strfmt.Registry) error {
 
 	if err := validate.MinimumInt("limit", "query", int64(*o.Limit), 1, false); err != nil {
-		return err
-	}
-
-	if err := validate.MaximumInt("limit", "query", int64(*o.Limit), 50, false); err != nil {
 		return err
 	}
 

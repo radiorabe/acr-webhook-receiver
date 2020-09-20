@@ -600,7 +600,6 @@ func init() {
   },
   "parameters": {
     "limitParam": {
-      "maximum": 50,
       "minimum": 1,
       "type": "integer",
       "default": 20,
@@ -790,7 +789,6 @@ func init() {
             "in": "query"
           },
           {
-            "maximum": 50,
             "minimum": 1,
             "type": "integer",
             "default": 20,
@@ -1251,7 +1249,6 @@ func init() {
   },
   "parameters": {
     "limitParam": {
-      "maximum": 50,
       "minimum": 1,
       "type": "integer",
       "default": 20,
