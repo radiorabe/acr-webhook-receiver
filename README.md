@@ -7,6 +7,9 @@ Spec and a server for receiving ACRCloud events and storing them to PostgreSQL.
 The received data is validated and stored in a JSONB field. There is a simple
 API to query the database.
 
+There is also a simple user-interface to consume the service. The code for the
+UI is in the [acr-webhook-receiver-ui repository](https://github.com/radiorabe/acr-webhook-receiver-ui).
+
 ## Requirements
 
 * PostgreSQL server
