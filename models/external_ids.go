@@ -19,7 +19,7 @@ type ExternalIds struct {
 	Deezer string `json:"deezer,omitempty"`
 
 	// isrc
-	Isrc string `json:"isrc,omitempty"`
+	Isrc interface{} `json:"isrc,omitempty"`
 
 	// itunes
 	Itunes string `json:"itunes,omitempty"`
@@ -34,7 +34,7 @@ type ExternalIds struct {
 	Spotify string `json:"spotify,omitempty"`
 
 	// upc
-	Upc string `json:"upc,omitempty"`
+	Upc interface{} `json:"upc,omitempty"`
 
 	// youtube
 	Youtube string `json:"youtube,omitempty"`

@@ -388,8 +388,12 @@ definitions:
     properties:
       deezer:
         type: string
-      isrc:
-        type: string
+      isrc: {}
+        # ISRC can be either a string or an array of string because they
+        # are just weird like that. In swagger 3.0 we would configure
+        # this so it allows both. With swagger 2.0 all can do is ignore
+        # validation on the property completely.
+        # type: string
       itunes:
         type: string
       lyricfind:
@@ -398,8 +402,16 @@ definitions:
         type: string
       spotify:
         type: string
-      upc:
-        type: string
+      upc: {}
+        # Depending on how a thing was released it can also have more
+        # than one UPC assigned. This seems to only affect cases where
+        # a recording has been assigned multiple ISRC numbers. Given
+        # this chaos stems from the collection societies it really
+        # doesn't look like have that much interest in receiving
+        # complete reports. This kind of adds up with the fact that
+        # broadcasters get a rebate for complete listings.
+        # Fuck capitalism!
+        # type: string
       youtube:
         type: string
   ExternalMetadata:

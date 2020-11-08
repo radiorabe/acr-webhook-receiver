@@ -296,9 +296,7 @@ func init() {
         "deezer": {
           "type": "string"
         },
-        "isrc": {
-          "type": "string"
-        },
+        "isrc": {},
         "itunes": {
           "type": "string"
         },
@@ -311,9 +309,7 @@ func init() {
         "spotify": {
           "type": "string"
         },
-        "upc": {
-          "type": "string"
-        },
+        "upc": {},
         "youtube": {
           "type": "string"
         }
@@ -941,9 +937,7 @@ func init() {
         "deezer": {
           "type": "string"
         },
-        "isrc": {
-          "type": "string"
-        },
+        "isrc": {},
         "itunes": {
           "type": "string"
         },
@@ -956,9 +950,7 @@ func init() {
         "spotify": {
           "type": "string"
         },
-        "upc": {
-          "type": "string"
-        },
+        "upc": {},
         "youtube": {
           "type": "string"
         }
