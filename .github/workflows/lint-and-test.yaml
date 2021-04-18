@@ -14,19 +14,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup Python
-        uses: actions/setup-python@v1
-
-      - name: Set PY env
-        run: echo "::set-env name=PY::$(python -c 'import hashlib, sys;print(hashlib.sha256(sys.version.encode()+sys.executable.encode()).hexdigest())')"
-
-      - name: Cache pre-commit env
-        uses: actions/cache@v1
-        with:
-          path: ~/.cache/pre-commit
-          key: pre-commit|${{ env.PY }}|${{ hashFiles('.pre-commit-config.yaml') }}
+        uses: actions/setup-python@v2
 
       - name: Run pre-commit
-        uses: pre-commit/action@v1.0.1
+        uses: pre-commit/action@v2.0.2
 
       - name: Run GolangCI-Lint
         uses: actions-contrib/golangci-lint@v1
