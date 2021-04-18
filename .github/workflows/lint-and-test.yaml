@@ -30,3 +30,11 @@ jobs:
 
       - name: Run GolangCI-Lint
         uses: actions-contrib/golangci-lint@v1
+
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v1
+        with:
+          version: latest
+          args: --snapshot --skip-publish --rm-dist
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_SECRET }}
