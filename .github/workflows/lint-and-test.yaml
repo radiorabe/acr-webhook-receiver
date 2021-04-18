@@ -1,4 +1,4 @@
-name: Run pre-commit
+name: Lint and Test
 
 on:
   pull_request:
