@@ -1,10 +1,7 @@
 name: Run pre-commit
 
 on:
-  push:
-    branches-ignore:
-      - main
-      - gh-pages
+  pull_request:
 
 jobs:
   pre-commit:
@@ -32,6 +29,8 @@ jobs:
 
       - name: Run GolangCI-Lint
         uses: golangci/golangci-lint-action@v2
+        with:
+          skip-go-installation: true
 
   goreleaser:
     runs-on: ubuntu-latest
