@@ -199,6 +199,13 @@ func configureServer(s *http.Server, scheme, addr string) {
 	if err := getDatabase().AutoMigrate(&models.Result{}); err != nil {
 		log.WithError(err).Fatal(err)
 	}
+	idx := `
+		CREATE INDEX IF NOT EXISTS idx_result
+		ON results USING gin (result);
+	`
+	if tx := getDatabase().Exec(idx); tx.Error != nil {
+		log.WithError(tx.Error).Fatal(tx.Error)
+	}
 }
 
 // The middleware configuration is for the handler executors. These do not apply to the swagger.json document.
