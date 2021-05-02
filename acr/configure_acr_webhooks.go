@@ -15,6 +15,7 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
 	"gorm.io/driver/postgres"
@@ -79,8 +80,13 @@ func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 	}
 
 	api.WebhookAddResultHandler = webhook.AddResultHandlerFunc(func(params webhook.AddResultParams, principal *models.Principal) middleware.Responder {
+		ts, err := time.Parse("2006-01-02 15:04:05", *params.Body.Data.Metadata.TimestampUtc)
+		if err != nil {
+			log.WithError(err).Error(err)
+		}
 		record := &models.Result{
-			Result: params.Body,
+			Result:    params.Body,
+			Timestamp: strfmt.DateTime(ts),
 		}
 		result := getDatabase().Create(record)
 		if result.Error != nil {
@@ -202,24 +208,6 @@ func configureServer(s *http.Server, scheme, addr string) {
 		-- index to allow all kinds of searched
 		CREATE INDEX IF NOT EXISTS idx_result
 		ON results USING gin (result);
-
-		-- populates the timestamp field which is also indexable for faster to/from searches
-		CREATE OR REPLACE FUNCTION fn_results_insert()
-		RETURNS trigger
-		AS $$
-		BEGIN
-			NEW.timestamp = TO_TIMESTAMP((NEW.result -> 'data' -> 'metadata' ->> 'timestamp_utc') || ' 0000', 'YYYY-MM-DD HH24:MI:SS TZH');
-			RETURN NEW;
-		END;
-		$$
-		LANGUAGE PLPGSQL;
-
-		DROP TRIGGER IF EXISTS trg_results_insert ON results;
-		CREATE TRIGGER trg_results_insert
-		AFTER INSERT
-		ON results
-		FOR EACH ROW
-		EXECUTE PROCEDURE fn_results_insert();
 	`
 	if tx := getDatabase().Exec(sql); tx.Error != nil {
 		log.WithError(tx.Error).Fatal(tx.Error)
