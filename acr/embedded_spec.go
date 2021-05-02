@@ -492,6 +492,11 @@ func init() {
         "result": {
           "x-go-custom-tag": "gorm:\"type:jsonb;\"",
           "$ref": "#/definitions/Webhook"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-custom-tag": "gorm:\"type:time;index;\""
         }
       }
     },
@@ -1134,6 +1139,11 @@ func init() {
         "result": {
           "x-go-custom-tag": "gorm:\"type:jsonb;\"",
           "$ref": "#/definitions/Webhook"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-custom-tag": "gorm:\"type:time;index;\""
         }
       }
     },

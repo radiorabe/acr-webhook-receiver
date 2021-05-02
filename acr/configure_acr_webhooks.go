@@ -33,8 +33,7 @@ import (
 type requestIDKeyType string
 
 const (
-	resultsRecordTsUTCQuery                  = "to_timestamp((result -> 'data' -> 'metadata' ->> 'timestamp_utc') || ' 0000', 'YYYY-MM-DD HH24:MI:SS TZH')"
-	requestIDKey            requestIDKeyType = ""
+	requestIDKey requestIDKeyType = ""
 )
 
 var dbConn *gorm.DB
@@ -105,7 +104,7 @@ func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 				return apiop.NewGetResultsInternalServerError()
 			}
 			query = query.Where(
-				fmt.Sprintf("%s >= ?", resultsRecordTsUTCQuery),
+				"timestamp >= ?",
 				from,
 			)
 		}
@@ -115,7 +114,7 @@ func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 				return apiop.NewGetResultsInternalServerError()
 			}
 			query = query.Where(
-				fmt.Sprintf("%s <= ?", resultsRecordTsUTCQuery),
+				"timestamp <= ?",
 				to,
 			)
 		}
@@ -125,7 +124,7 @@ func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 		).Offset(
 			int(*params.Offset),
 		).Order(
-			fmt.Sprintf("%s desc", resultsRecordTsUTCQuery),
+			"timestamp desc",
 		).Scan(
 			&result,
 		)
@@ -162,13 +161,13 @@ func configureAPI(api *operations.ACRWebhooksAPI) http.Handler {
 			"result -> 'result_type' AS result_type",
 			"result -> 'data' -> 'status' AS status",
 		}).Where(
-			fmt.Sprintf("%s >= ?", resultsRecordTsUTCQuery),
+			"timestamp >= ?",
 			date.Format("2006-01-02T15:04:05Z"),
 		).Where(
-			fmt.Sprintf("%s < ?", resultsRecordTsUTCQuery),
+			"timestamp < ?",
 			date.Add(24*time.Hour).Format("2006-01-02T15:04:05Z"),
 		).Order(
-			fmt.Sprintf("%s asc", resultsRecordTsUTCQuery),
+			"timestamp asc",
 		).Scan(
 			&result,
 		)
@@ -199,11 +198,30 @@ func configureServer(s *http.Server, scheme, addr string) {
 	if err := getDatabase().AutoMigrate(&models.Result{}); err != nil {
 		log.WithError(err).Fatal(err)
 	}
-	idx := `
+	sql := `
+		-- index to allow all kinds of searched
 		CREATE INDEX IF NOT EXISTS idx_result
 		ON results USING gin (result);
+
+		-- populates the timestamp field which is also indexable for faster to/from searches
+		CREATE OR REPLACE FUNCTION fn_results_insert()
+		RETURNS trigger
+		AS $$
+		BEGIN
+			NEW.timestamp = TO_TIMESTAMP((NEW.result -> 'data' -> 'metadata' ->> 'timestamp_utc') || ' 0000', 'YYYY-MM-DD HH24:MI:SS TZH');
+			RETURN NEW;
+		END;
+		$$
+		LANGUAGE PLPGSQL;
+
+		DROP TRIGGER IF EXISTS trg_results_insert ON results;
+		CREATE TRIGGER trg_results_insert
+		AFTER INSERT
+		ON results
+		FOR EACH ROW
+		EXECUTE PROCEDURE fn_results_insert();
 	`
-	if tx := getDatabase().Exec(idx); tx.Error != nil {
+	if tx := getDatabase().Exec(sql); tx.Error != nil {
 		log.WithError(tx.Error).Fatal(tx.Error)
 	}
 }
