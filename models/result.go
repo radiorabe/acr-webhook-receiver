@@ -9,6 +9,7 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // Result result
@@ -21,6 +22,10 @@ type Result struct {
 
 	// result
 	Result *Webhook `json:"result,omitempty" gorm:"type:jsonb;"`
+
+	// timestamp
+	// Format: date-time
+	Timestamp strfmt.DateTime `json:"timestamp,omitempty" gorm:"type:time;index;"`
 }
 
 // Validate validates this result
@@ -28,6 +33,10 @@ func (m *Result) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateResult(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateTimestamp(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -50,6 +59,19 @@ func (m *Result) validateResult(formats strfmt.Registry) error {
 			}
 			return err
 		}
+	}
+
+	return nil
+}
+
+func (m *Result) validateTimestamp(formats strfmt.Registry) error {
+
+	if swag.IsZero(m.Timestamp) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("timestamp", "body", "date-time", m.Timestamp.String(), formats); err != nil {
+		return err
 	}
 
 	return nil

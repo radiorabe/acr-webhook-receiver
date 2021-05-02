@@ -170,6 +170,10 @@ definitions:
       result:
         $ref: '#/definitions/Webhook'
         x-go-custom-tag: gorm:"type:jsonb;"
+      timestamp:
+        type: "string"
+        format: "date-time"
+        x-go-custom-tag: gorm:"type:time;index;"
   Webhook:
     type: "object"
     properties:
