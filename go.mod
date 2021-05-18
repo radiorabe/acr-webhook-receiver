@@ -22,5 +22,5 @@ require (
 	golang.org/x/net v0.0.0-20210415231046-e915ea6b2b7d
 	golang.org/x/sys v0.0.0-20210415045647-66c3f260301c // indirect
 	gorm.io/driver/postgres v1.0.8
-	gorm.io/gorm v1.21.9
+	gorm.io/gorm v1.21.10
 )
