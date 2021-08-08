@@ -15,7 +15,8 @@ import (
 )
 
 // NewGetResultParams creates a new GetResultParams object
-// no default values defined in spec.
+//
+// There are no default values defined in the spec.
 func NewGetResultParams() GetResultParams {
 
 	return GetResultParams{}
@@ -58,7 +59,6 @@ func (o *GetResultParams) BindRequest(r *http.Request, route *middleware.Matched
 	if err := o.bindResultID(rResultID, rhkResultID, route.Formats); err != nil {
 		res = append(res, err)
 	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -77,7 +77,6 @@ func (o *GetResultParams) bindXRequestID(rawData []string, hasKey bool, formats 
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}
-
 	o.XRequestID = &raw
 
 	return nil

@@ -31,7 +31,7 @@ func NewAddResult(ctx *middleware.Context, handler AddResultHandler) *AddResult 
 	return &AddResult{Context: ctx, Handler: handler}
 }
 
-/*AddResult swagger:route POST /v1/_webhooks/results webhook addResult
+/* AddResult swagger:route POST /v1/_webhooks/results webhook addResult
 
 ACRCloud results callback
 
@@ -46,17 +46,16 @@ type AddResult struct {
 func (o *AddResult) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
-		r = rCtx
+		*r = *rCtx
 	}
 	var Params = NewAddResultParams()
-
 	uprinc, aCtx, err := o.Context.Authorize(r, route)
 	if err != nil {
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 	if aCtx != nil {
-		r = aCtx
+		*r = *aCtx
 	}
 	var principal *models.Principal
 	if uprinc != nil {
@@ -69,7 +68,6 @@ func (o *AddResult) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	res := o.Handler.Handle(Params, principal) // actually handle the request
-
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

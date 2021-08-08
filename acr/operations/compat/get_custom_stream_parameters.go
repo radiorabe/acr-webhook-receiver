@@ -89,7 +89,6 @@ func (o *GetCustomStreamParams) BindRequest(r *http.Request, route *middleware.M
 	if err := o.bindStreamID(rStreamID, rhkStreamID, route.Formats); err != nil {
 		res = append(res, err)
 	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -108,7 +107,6 @@ func (o *GetCustomStreamParams) bindXRequestID(rawData []string, hasKey bool, fo
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}
-
 	o.XRequestID = &raw
 
 	return nil
@@ -123,10 +121,10 @@ func (o *GetCustomStreamParams) bindAccessKey(rawData []string, hasKey bool, for
 
 	// Required: false
 	// AllowEmptyValue: false
+
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}
-
 	o.AccessKey = &raw
 
 	return nil
@@ -144,10 +142,10 @@ func (o *GetCustomStreamParams) bindDate(rawData []string, hasKey bool, formats 
 
 	// Required: true
 	// AllowEmptyValue: false
+
 	if err := validate.RequiredString("date", "query", raw); err != nil {
 		return err
 	}
-
 	o.Date = raw
 
 	return nil
@@ -162,7 +160,6 @@ func (o *GetCustomStreamParams) bindStreamID(rawData []string, hasKey bool, form
 
 	// Required: true
 	// Parameter is provided by construction from the route
-
 	o.StreamID = raw
 
 	return nil

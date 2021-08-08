@@ -35,7 +35,6 @@ func (o *GetResultReader) ReadResponse(response runtime.ClientResponse, consumer
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -46,7 +45,7 @@ func NewGetResultOK() *GetResultOK {
 	return &GetResultOK{}
 }
 
-/*GetResultOK handles this case with default header values.
+/* GetResultOK describes a response with status code 200, with default header values.
 
 Returns single result
 */
@@ -57,7 +56,6 @@ type GetResultOK struct {
 func (o *GetResultOK) Error() string {
 	return fmt.Sprintf("[GET /v1/results/{resultId}][%d] getResultOK  %+v", 200, o.Payload)
 }
-
 func (o *GetResultOK) GetPayload() *models.Result {
 	return o.Payload
 }
@@ -79,7 +77,7 @@ func NewGetResultInternalServerError() *GetResultInternalServerError {
 	return &GetResultInternalServerError{}
 }
 
-/*GetResultInternalServerError handles this case with default header values.
+/* GetResultInternalServerError describes a response with status code 500, with default header values.
 
 Server Error
 */

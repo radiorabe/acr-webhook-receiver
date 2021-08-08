@@ -103,7 +103,6 @@ func (o *GetResultsParams) BindRequest(r *http.Request, route *middleware.Matche
 	if err := o.bindTo(qTo, qhkTo, route.Formats); err != nil {
 		res = append(res, err)
 	}
-
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -122,7 +121,6 @@ func (o *GetResultsParams) bindXRequestID(rawData []string, hasKey bool, formats
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}
-
 	o.XRequestID = &raw
 
 	return nil
@@ -137,6 +135,7 @@ func (o *GetResultsParams) bindFrom(rawData []string, hasKey bool, formats strfm
 
 	// Required: false
 	// AllowEmptyValue: false
+
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}
@@ -173,6 +172,7 @@ func (o *GetResultsParams) bindLimit(rawData []string, hasKey bool, formats strf
 
 	// Required: false
 	// AllowEmptyValue: false
+
 	if raw == "" { // empty values pass all other validations
 		// Default values have been previously initialized by NewGetResultsParams()
 		return nil
@@ -194,7 +194,7 @@ func (o *GetResultsParams) bindLimit(rawData []string, hasKey bool, formats strf
 // validateLimit carries on validations for parameter Limit
 func (o *GetResultsParams) validateLimit(formats strfmt.Registry) error {
 
-	if err := validate.MinimumInt("limit", "query", int64(*o.Limit), 1, false); err != nil {
+	if err := validate.MinimumInt("limit", "query", *o.Limit, 1, false); err != nil {
 		return err
 	}
 
@@ -210,6 +210,7 @@ func (o *GetResultsParams) bindOffset(rawData []string, hasKey bool, formats str
 
 	// Required: false
 	// AllowEmptyValue: false
+
 	if raw == "" { // empty values pass all other validations
 		// Default values have been previously initialized by NewGetResultsParams()
 		return nil
@@ -231,7 +232,7 @@ func (o *GetResultsParams) bindOffset(rawData []string, hasKey bool, formats str
 // validateOffset carries on validations for parameter Offset
 func (o *GetResultsParams) validateOffset(formats strfmt.Registry) error {
 
-	if err := validate.MinimumInt("offset", "query", int64(*o.Offset), 0, false); err != nil {
+	if err := validate.MinimumInt("offset", "query", *o.Offset, 0, false); err != nil {
 		return err
 	}
 
@@ -247,6 +248,7 @@ func (o *GetResultsParams) bindTo(rawData []string, hasKey bool, formats strfmt.
 
 	// Required: false
 	// AllowEmptyValue: false
+
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}

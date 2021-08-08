@@ -25,11 +25,14 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
+// ClientOption is the option for Client methods
+type ClientOption func(*runtime.ClientOperation)
+
 // ClientService is the interface for Client methods
 type ClientService interface {
-	GetResult(params *GetResultParams) (*GetResultOK, error)
+	GetResult(params *GetResultParams, opts ...ClientOption) (*GetResultOK, error)
 
-	GetResults(params *GetResultsParams) (*GetResultsOK, error)
+	GetResults(params *GetResultsParams, opts ...ClientOption) (*GetResultsOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -39,13 +42,12 @@ type ClientService interface {
 
   Use this endpoint to fetch information on an exact entry.
 */
-func (a *Client) GetResult(params *GetResultParams) (*GetResultOK, error) {
+func (a *Client) GetResult(params *GetResultParams, opts ...ClientOption) (*GetResultOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetResultParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "getResult",
 		Method:             "GET",
 		PathPattern:        "/v1/results/{resultId}",
@@ -56,7 +58,12 @@ func (a *Client) GetResult(params *GetResultParams) (*GetResultOK, error) {
 		Reader:             &GetResultReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
@@ -75,13 +82,12 @@ func (a *Client) GetResult(params *GetResultParams) (*GetResultOK, error) {
 
   This is endpoint is useful for looking into and exporting the dataset.
 */
-func (a *Client) GetResults(params *GetResultsParams) (*GetResultsOK, error) {
+func (a *Client) GetResults(params *GetResultsParams, opts ...ClientOption) (*GetResultsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetResultsParams()
 	}
-
-	result, err := a.transport.Submit(&runtime.ClientOperation{
+	op := &runtime.ClientOperation{
 		ID:                 "getResults",
 		Method:             "GET",
 		PathPattern:        "/v1/results",
@@ -92,7 +98,12 @@ func (a *Client) GetResults(params *GetResultsParams) (*GetResultsOK, error) {
 		Reader:             &GetResultsReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
-	})
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}

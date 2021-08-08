@@ -41,7 +41,6 @@ func (o *GetCustomStreamReader) ReadResponse(response runtime.ClientResponse, co
 			return nil, err
 		}
 		return nil, result
-
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -52,7 +51,7 @@ func NewGetCustomStreamOK() *GetCustomStreamOK {
 	return &GetCustomStreamOK{}
 }
 
-/*GetCustomStreamOK handles this case with default header values.
+/* GetCustomStreamOK describes a response with status code 200, with default header values.
 
 Results without local ID
 */
@@ -63,7 +62,6 @@ type GetCustomStreamOK struct {
 func (o *GetCustomStreamOK) Error() string {
 	return fmt.Sprintf("[GET /v1/monitor-streams/{streamId}/results][%d] getCustomStreamOK  %+v", 200, o.Payload)
 }
-
 func (o *GetCustomStreamOK) GetPayload() []*models.Data {
 	return o.Payload
 }
@@ -83,7 +81,7 @@ func NewGetCustomStreamBadRequest() *GetCustomStreamBadRequest {
 	return &GetCustomStreamBadRequest{}
 }
 
-/*GetCustomStreamBadRequest handles this case with default header values.
+/* GetCustomStreamBadRequest describes a response with status code 400, with default header values.
 
 Bad Request
 */
@@ -104,7 +102,7 @@ func NewGetCustomStreamInternalServerError() *GetCustomStreamInternalServerError
 	return &GetCustomStreamInternalServerError{}
 }
 
-/*GetCustomStreamInternalServerError handles this case with default header values.
+/* GetCustomStreamInternalServerError describes a response with status code 500, with default header values.
 
 Server Error
 */

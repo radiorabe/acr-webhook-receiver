@@ -16,83 +16,101 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// NewGetCustomStreamParams creates a new GetCustomStreamParams object
-// with the default values initialized.
+// NewGetCustomStreamParams creates a new GetCustomStreamParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewGetCustomStreamParams() *GetCustomStreamParams {
-	var (
-		streamIDDefault = string("s-qXuJARB")
-	)
 	return &GetCustomStreamParams{
-		StreamID: streamIDDefault,
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewGetCustomStreamParamsWithTimeout creates a new GetCustomStreamParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewGetCustomStreamParamsWithTimeout(timeout time.Duration) *GetCustomStreamParams {
-	var (
-		streamIDDefault = string("s-qXuJARB")
-	)
 	return &GetCustomStreamParams{
-		StreamID: streamIDDefault,
-
 		timeout: timeout,
 	}
 }
 
 // NewGetCustomStreamParamsWithContext creates a new GetCustomStreamParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewGetCustomStreamParamsWithContext(ctx context.Context) *GetCustomStreamParams {
-	var (
-		streamIdDefault = string("s-qXuJARB")
-	)
 	return &GetCustomStreamParams{
-		StreamID: streamIdDefault,
-
 		Context: ctx,
 	}
 }
 
 // NewGetCustomStreamParamsWithHTTPClient creates a new GetCustomStreamParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewGetCustomStreamParamsWithHTTPClient(client *http.Client) *GetCustomStreamParams {
-	var (
-		streamIdDefault = string("s-qXuJARB")
-	)
 	return &GetCustomStreamParams{
-		StreamID:   streamIdDefault,
 		HTTPClient: client,
 	}
 }
 
-/*GetCustomStreamParams contains all the parameters to send to the API endpoint
-for the get custom stream operation typically these are written to a http.Request
+/* GetCustomStreamParams contains all the parameters to send to the API endpoint
+   for the get custom stream operation.
+
+   Typically these are written to a http.Request.
 */
 type GetCustomStreamParams struct {
 
-	/*XRequestID*/
+	// XRequestID.
 	XRequestID *string
-	/*AccessKey
-	  Ignored but available for compatibility with upstream.
 
+	/* AccessKey.
+
+	   Ignored but available for compatibility with upstream.
 	*/
 	AccessKey *string
-	/*Date
-	  The UTC date in the format 'YYYYMMDD'
 
+	/* Date.
+
+	   The UTC date in the format 'YYYYMMDD'
 	*/
 	Date string
-	/*StreamID
-	  Stream ID, default is the non-realtime RaBe program.
 
+	/* StreamID.
+
+	   Stream ID, default is the non-realtime RaBe program.
+
+	   Default: "s-qXuJARB"
 	*/
 	StreamID string
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the get custom stream params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *GetCustomStreamParams) WithDefaults() *GetCustomStreamParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the get custom stream params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *GetCustomStreamParams) SetDefaults() {
+	var (
+		streamIDDefault = string("s-qXuJARB")
+	)
+
+	val := GetCustomStreamParams{
+		StreamID: streamIDDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the get custom stream params
@@ -186,29 +204,30 @@ func (o *GetCustomStreamParams) WriteToRequest(r runtime.ClientRequest, reg strf
 		if err := r.SetHeaderParam("X-Request-ID", *o.XRequestID); err != nil {
 			return err
 		}
-
 	}
 
 	if o.AccessKey != nil {
 
 		// query param access_key
 		var qrAccessKey string
+
 		if o.AccessKey != nil {
 			qrAccessKey = *o.AccessKey
 		}
 		qAccessKey := qrAccessKey
 		if qAccessKey != "" {
+
 			if err := r.SetQueryParam("access_key", qAccessKey); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	// query param date
 	qrDate := o.Date
 	qDate := qrDate
 	if qDate != "" {
+
 		if err := r.SetQueryParam("date", qDate); err != nil {
 			return err
 		}
