@@ -14,13 +14,12 @@ require (
 	github.com/go-openapi/validate v0.20.2
 	github.com/gofrs/uuid v4.0.0+incompatible
 	github.com/jackc/pgproto3/v2 v2.0.7 // indirect
-	github.com/jackc/pgx/v4 v4.11.0 // indirect
 	github.com/jessevdk/go-flags v1.5.0
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/sirupsen/logrus v1.8.1
 	golang.org/x/crypto v0.0.0-20210415154028-4f45737414dc // indirect
 	golang.org/x/net v0.0.0-20210415231046-e915ea6b2b7d
 	golang.org/x/sys v0.0.0-20210415045647-66c3f260301c // indirect
-	gorm.io/driver/postgres v1.0.8
+	gorm.io/driver/postgres v1.1.0
 	gorm.io/gorm v1.21.9
 )
