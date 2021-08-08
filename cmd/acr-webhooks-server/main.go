@@ -8,6 +8,7 @@ import (
 
 	"github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
+
 	"github.com/radiorabe/acr-webhook-receiver/acr"
 	"github.com/radiorabe/acr-webhook-receiver/acr/operations"
 )

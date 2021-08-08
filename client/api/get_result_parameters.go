@@ -17,58 +17,73 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewGetResultParams creates a new GetResultParams object
-// with the default values initialized.
+// NewGetResultParams creates a new GetResultParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewGetResultParams() *GetResultParams {
-	var ()
 	return &GetResultParams{
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewGetResultParamsWithTimeout creates a new GetResultParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewGetResultParamsWithTimeout(timeout time.Duration) *GetResultParams {
-	var ()
 	return &GetResultParams{
-
 		timeout: timeout,
 	}
 }
 
 // NewGetResultParamsWithContext creates a new GetResultParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewGetResultParamsWithContext(ctx context.Context) *GetResultParams {
-	var ()
 	return &GetResultParams{
-
 		Context: ctx,
 	}
 }
 
 // NewGetResultParamsWithHTTPClient creates a new GetResultParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewGetResultParamsWithHTTPClient(client *http.Client) *GetResultParams {
-	var ()
 	return &GetResultParams{
 		HTTPClient: client,
 	}
 }
 
-/*GetResultParams contains all the parameters to send to the API endpoint
-for the get result operation typically these are written to a http.Request
+/* GetResultParams contains all the parameters to send to the API endpoint
+   for the get result operation.
+
+   Typically these are written to a http.Request.
 */
 type GetResultParams struct {
 
-	/*XRequestID*/
+	// XRequestID.
 	XRequestID *string
-	/*ResultID*/
+
+	// ResultID.
 	ResultID int64
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the get result params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *GetResultParams) WithDefaults() *GetResultParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the get result params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *GetResultParams) SetDefaults() {
+	// no default values defined for this parameter
 }
 
 // WithTimeout adds the timeout to the get result params
@@ -140,7 +155,6 @@ func (o *GetResultParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		if err := r.SetHeaderParam("X-Request-ID", *o.XRequestID); err != nil {
 			return err
 		}
-
 	}
 
 	// path param resultId

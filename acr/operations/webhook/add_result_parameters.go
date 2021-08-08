@@ -6,6 +6,7 @@ package webhook
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"io"
 	"net/http"
 
@@ -13,12 +14,14 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/validate"
 
 	"github.com/radiorabe/acr-webhook-receiver/models"
 )
 
 // NewAddResultParams creates a new AddResultParams object
-// no default values defined in spec.
+//
+// There are no default values defined in the spec.
 func NewAddResultParams() AddResultParams {
 
 	return AddResultParams{}
@@ -72,6 +75,11 @@ func (o *AddResultParams) BindRequest(r *http.Request, route *middleware.Matched
 				res = append(res, err)
 			}
 
+			ctx := validate.WithOperationRequest(context.Background())
+			if err := body.ContextValidate(ctx, route.Formats); err != nil {
+				res = append(res, err)
+			}
+
 			if len(res) == 0 {
 				o.Body = &body
 			}
@@ -97,7 +105,6 @@ func (o *AddResultParams) bindXRequestID(rawData []string, hasKey bool, formats 
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}
-
 	o.XRequestID = &raw
 
 	return nil

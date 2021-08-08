@@ -17,90 +17,108 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// NewGetResultsParams creates a new GetResultsParams object
-// with the default values initialized.
+// NewGetResultsParams creates a new GetResultsParams object,
+// with the default timeout for this client.
+//
+// Default values are not hydrated, since defaults are normally applied by the API server side.
+//
+// To enforce default values in parameter, use SetDefaults or WithDefaults.
 func NewGetResultsParams() *GetResultsParams {
-	var (
-		limitDefault  = int64(20)
-		offsetDefault = int64(0)
-	)
 	return &GetResultsParams{
-		Limit:  &limitDefault,
-		Offset: &offsetDefault,
-
 		timeout: cr.DefaultTimeout,
 	}
 }
 
 // NewGetResultsParamsWithTimeout creates a new GetResultsParams object
-// with the default values initialized, and the ability to set a timeout on a request
+// with the ability to set a timeout on a request.
 func NewGetResultsParamsWithTimeout(timeout time.Duration) *GetResultsParams {
-	var (
-		limitDefault  = int64(20)
-		offsetDefault = int64(0)
-	)
 	return &GetResultsParams{
-		Limit:  &limitDefault,
-		Offset: &offsetDefault,
-
 		timeout: timeout,
 	}
 }
 
 // NewGetResultsParamsWithContext creates a new GetResultsParams object
-// with the default values initialized, and the ability to set a context for a request
+// with the ability to set a context for a request.
 func NewGetResultsParamsWithContext(ctx context.Context) *GetResultsParams {
-	var (
-		limitDefault  = int64(20)
-		offsetDefault = int64(0)
-	)
 	return &GetResultsParams{
-		Limit:  &limitDefault,
-		Offset: &offsetDefault,
-
 		Context: ctx,
 	}
 }
 
 // NewGetResultsParamsWithHTTPClient creates a new GetResultsParams object
-// with the default values initialized, and the ability to set a custom HTTPClient for a request
+// with the ability to set a custom HTTPClient for a request.
 func NewGetResultsParamsWithHTTPClient(client *http.Client) *GetResultsParams {
-	var (
-		limitDefault  = int64(20)
-		offsetDefault = int64(0)
-	)
 	return &GetResultsParams{
-		Limit:      &limitDefault,
-		Offset:     &offsetDefault,
 		HTTPClient: client,
 	}
 }
 
-/*GetResultsParams contains all the parameters to send to the API endpoint
-for the get results operation typically these are written to a http.Request
+/* GetResultsParams contains all the parameters to send to the API endpoint
+   for the get results operation.
+
+   Typically these are written to a http.Request.
 */
 type GetResultsParams struct {
 
-	/*XRequestID*/
+	// XRequestID.
 	XRequestID *string
-	/*From*/
-	From *strfmt.DateTime
-	/*Limit
-	  The numbers of items to return.
 
+	// From.
+	//
+	// Format: date-time
+	From *strfmt.DateTime
+
+	/* Limit.
+
+	   The numbers of items to return.
+
+	   Default: 20
 	*/
 	Limit *int64
-	/*Offset
-	  The number of items to skip before starting to collect the result set.
 
+	/* Offset.
+
+	   The number of items to skip before starting to collect the result set.
 	*/
 	Offset *int64
-	/*To*/
+
+	// To.
+	//
+	// Format: date-time
 	To *strfmt.DateTime
 
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
+}
+
+// WithDefaults hydrates default values in the get results params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *GetResultsParams) WithDefaults() *GetResultsParams {
+	o.SetDefaults()
+	return o
+}
+
+// SetDefaults hydrates default values in the get results params (not the query body).
+//
+// All values with no default are reset to their zero value.
+func (o *GetResultsParams) SetDefaults() {
+	var (
+		limitDefault = int64(20)
+
+		offsetDefault = int64(0)
+	)
+
+	val := GetResultsParams{
+		Limit:  &limitDefault,
+		Offset: &offsetDefault,
+	}
+
+	val.timeout = o.timeout
+	val.Context = o.Context
+	val.HTTPClient = o.HTTPClient
+	*o = val
 }
 
 // WithTimeout adds the timeout to the get results params
@@ -205,71 +223,74 @@ func (o *GetResultsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 		if err := r.SetHeaderParam("X-Request-ID", *o.XRequestID); err != nil {
 			return err
 		}
-
 	}
 
 	if o.From != nil {
 
 		// query param from
 		var qrFrom strfmt.DateTime
+
 		if o.From != nil {
 			qrFrom = *o.From
 		}
 		qFrom := qrFrom.String()
 		if qFrom != "" {
+
 			if err := r.SetQueryParam("from", qFrom); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Limit != nil {
 
 		// query param limit
 		var qrLimit int64
+
 		if o.Limit != nil {
 			qrLimit = *o.Limit
 		}
 		qLimit := swag.FormatInt64(qrLimit)
 		if qLimit != "" {
+
 			if err := r.SetQueryParam("limit", qLimit); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.Offset != nil {
 
 		// query param offset
 		var qrOffset int64
+
 		if o.Offset != nil {
 			qrOffset = *o.Offset
 		}
 		qOffset := swag.FormatInt64(qrOffset)
 		if qOffset != "" {
+
 			if err := r.SetQueryParam("offset", qOffset); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if o.To != nil {
 
 		// query param to
 		var qrTo strfmt.DateTime
+
 		if o.To != nil {
 			qrTo = *o.To
 		}
 		qTo := qrTo.String()
 		if qTo != "" {
+
 			if err := r.SetQueryParam("to", qTo); err != nil {
 				return err
 			}
 		}
-
 	}
 
 	if len(res) > 0 {

@@ -29,7 +29,7 @@ func NewGetCustomStream(ctx *middleware.Context, handler GetCustomStreamHandler)
 	return &GetCustomStream{Context: ctx, Handler: handler}
 }
 
-/*GetCustomStream swagger:route GET /v1/monitor-streams/{streamId}/results compat getCustomStream
+/* GetCustomStream swagger:route GET /v1/monitor-streams/{streamId}/results compat getCustomStream
 
 ACRCloud Custom Streams Full Day Endpoint
 
@@ -44,17 +44,15 @@ type GetCustomStream struct {
 func (o *GetCustomStream) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
-		r = rCtx
+		*r = *rCtx
 	}
 	var Params = NewGetCustomStreamParams()
-
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
 	res := o.Handler.Handle(Params) // actually handle the request
-
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

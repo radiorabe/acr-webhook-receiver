@@ -29,7 +29,7 @@ func NewGetResults(ctx *middleware.Context, handler GetResultsHandler) *GetResul
 	return &GetResults{Context: ctx, Handler: handler}
 }
 
-/*GetResults swagger:route GET /v1/results api getResults
+/* GetResults swagger:route GET /v1/results api getResults
 
 Get ACRCloud Results
 
@@ -44,17 +44,15 @@ type GetResults struct {
 func (o *GetResults) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	route, rCtx, _ := o.Context.RouteInfo(r)
 	if rCtx != nil {
-		r = rCtx
+		*r = *rCtx
 	}
 	var Params = NewGetResultsParams()
-
 	if err := o.Context.BindValidRequest(r, route, &Params); err != nil { // bind params
 		o.Context.Respond(rw, r, route.Produces, route, err)
 		return
 	}
 
 	res := o.Handler.Handle(Params) // actually handle the request
-
 	o.Context.Respond(rw, r, route.Produces, route, res)
 
 }

@@ -6,6 +6,7 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"strconv"
 
 	"github.com/go-openapi/errors"
@@ -185,7 +186,6 @@ func (m *Music) validateAcrid(formats strfmt.Registry) error {
 }
 
 func (m *Music) validateAlbum(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Album) { // not required
 		return nil
 	}
@@ -203,7 +203,6 @@ func (m *Music) validateAlbum(formats strfmt.Registry) error {
 }
 
 func (m *Music) validateArtists(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Artists) { // not required
 		return nil
 	}
@@ -228,7 +227,6 @@ func (m *Music) validateArtists(formats strfmt.Registry) error {
 }
 
 func (m *Music) validateContributors(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Contributors) { // not required
 		return nil
 	}
@@ -300,7 +298,6 @@ func (m *Music) validateExternalMetadata(formats strfmt.Registry) error {
 }
 
 func (m *Music) validateGenres(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Genres) { // not required
 		return nil
 	}
@@ -325,7 +322,6 @@ func (m *Music) validateGenres(formats strfmt.Registry) error {
 }
 
 func (m *Music) validateLyrics(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.Lyrics) { // not required
 		return nil
 	}
@@ -352,7 +348,6 @@ func (m *Music) validatePlayOffsetMs(formats strfmt.Registry) error {
 }
 
 func (m *Music) validateReleaseByTerritories(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.ReleaseByTerritories) { // not required
 		return nil
 	}
@@ -386,7 +381,6 @@ func (m *Music) validateResultFrom(formats strfmt.Registry) error {
 }
 
 func (m *Music) validateRightsClaim(formats strfmt.Registry) error {
-
 	if swag.IsZero(m.RightsClaim) { // not required
 		return nil
 	}
@@ -434,11 +428,11 @@ func (m *Music) validateScore(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := validate.MinimumInt("score", "body", int64(*m.Score), 0, false); err != nil {
+	if err := validate.MinimumInt("score", "body", *m.Score, 0, false); err != nil {
 		return err
 	}
 
-	if err := validate.MaximumInt("score", "body", int64(*m.Score), 100, false); err != nil {
+	if err := validate.MaximumInt("score", "body", *m.Score, 100, false); err != nil {
 		return err
 	}
 
@@ -449,6 +443,194 @@ func (m *Music) validateTitle(formats strfmt.Registry) error {
 
 	if err := validate.Required("title", "body", m.Title); err != nil {
 		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this music based on the context it is used
+func (m *Music) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := m.contextValidateAlbum(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateArtists(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateContributors(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateExternalIds(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateExternalMetadata(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateGenres(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateLyrics(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateReleaseByTerritories(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateRightsClaim(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (m *Music) contextValidateAlbum(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Album != nil {
+		if err := m.Album.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("album")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Music) contextValidateArtists(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Artists); i++ {
+
+		if m.Artists[i] != nil {
+			if err := m.Artists[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("artists" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Music) contextValidateContributors(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Contributors != nil {
+		if err := m.Contributors.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("contributors")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Music) contextValidateExternalIds(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.ExternalIds != nil {
+		if err := m.ExternalIds.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("external_ids")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Music) contextValidateExternalMetadata(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.ExternalMetadata != nil {
+		if err := m.ExternalMetadata.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("external_metadata")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Music) contextValidateGenres(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.Genres); i++ {
+
+		if m.Genres[i] != nil {
+			if err := m.Genres[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("genres" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Music) contextValidateLyrics(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Lyrics != nil {
+		if err := m.Lyrics.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("lyrics")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *Music) contextValidateReleaseByTerritories(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.ReleaseByTerritories); i++ {
+
+		if m.ReleaseByTerritories[i] != nil {
+			if err := m.ReleaseByTerritories[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("release_by_territories" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (m *Music) contextValidateRightsClaim(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(m.RightsClaim); i++ {
+
+		if m.RightsClaim[i] != nil {
+			if err := m.RightsClaim[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("rights_claim" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
 	}
 
 	return nil

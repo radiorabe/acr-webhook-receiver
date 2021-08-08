@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -21,6 +23,11 @@ type Lyrics struct {
 
 // Validate validates this lyrics
 func (m *Lyrics) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this lyrics based on context it is used
+func (m *Lyrics) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

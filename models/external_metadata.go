@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -42,6 +44,11 @@ type ExternalMetadata struct {
 
 // Validate validates this external metadata
 func (m *ExternalMetadata) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this external metadata based on context it is used
+func (m *ExternalMetadata) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 

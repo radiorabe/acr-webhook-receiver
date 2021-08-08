@@ -6,6 +6,8 @@ package models
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
@@ -24,6 +26,11 @@ type RightsOwner struct {
 
 // Validate validates this rights owner
 func (m *RightsOwner) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this rights owner based on context it is used
+func (m *RightsOwner) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
